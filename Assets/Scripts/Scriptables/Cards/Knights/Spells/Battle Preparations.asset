@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e904350485fbee945a5d81eb7a5bbde6, type: 3}
+  m_Name: Battle Preparations
+  m_EditorClassIdentifier: 
+  CardName: Battle Preparations
+  CardType: SPELL
+  CardRace: Knight
+  CardAbilty1: Look at the top 4 cards of your deck, put up to 1 <Knight> or <Commander>
+    card from among them into your hand and the rest to the bottom of your deck in
+    any order. Shuffle your deck.
+  CardAbility2: 
+  CardCost: 3
+  CardCost2: 0
+  CardRank: 0
+  CardAttack: 0
+  CardDefense: 0

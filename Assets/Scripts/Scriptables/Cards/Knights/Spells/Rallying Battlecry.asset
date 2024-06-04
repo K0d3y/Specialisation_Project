@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e904350485fbee945a5d81eb7a5bbde6, type: 3}
+  m_Name: Rallying Battlecry
+  m_EditorClassIdentifier: 
+  CardName: Rallying Battlecry
+  CardType: SPELL
+  CardRace: Knight
+  CardAbilty1: 'Choose one of the following:
+
+    - Summon 3 1/1 Swordsman Tokens.
+
+    -
+    All units on your field get +1/+1.
+
+    - Choose a unit on your field, for this
+    turn, give it [+1 Critical].'
+  CardAbility2: 
+  CardCost: 8
+  CardCost2: 0
+  CardRank: 0
+  CardAttack: 0
+  CardDefense: 0
