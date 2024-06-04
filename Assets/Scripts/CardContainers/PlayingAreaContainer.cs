@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayingAreaContainer : CardContainer
@@ -39,5 +40,23 @@ public class PlayingAreaContainer : CardContainer
         cardList[0] = card;
 
         ResetCardOffset();
+    }
+
+    public void RestCard()
+    {
+        if (cardList.Count > 0)
+        {
+            cardList[0].transform.localEulerAngles = new Vector3(0, 0, 90);
+            cardList[0].GetComponentInChildren<Card>().canAttack = false;
+        }
+    }
+
+    public void StandCard()
+    {
+        if (cardList.Count > 0)
+        {
+            cardList[0].transform.localEulerAngles = new Vector3(0, 0, 0);
+            cardList[0].GetComponentInChildren<Card>().canAttack = true;
+        }
     }
 }

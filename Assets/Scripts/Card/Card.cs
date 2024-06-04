@@ -3,10 +3,11 @@ using UnityEngine;
 
 public class Card : MonoBehaviour
 {
-    public CardData cardData;
+    [SerializeField] float hoverDistance = 0.5f;
     public bool isFlippedDown = false;
     public bool isHovering = false;
-    [SerializeField] float hoverDistance = 0.5f;
+    public bool canAttack = true;
+    public CardData cardData;
 
     // card details
     [SerializeField]

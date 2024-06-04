@@ -73,7 +73,7 @@ public class CardPromptController : MonoBehaviour
     }
     public void ShowTargets()
     {
-        if (myTurn && GameplayManager.Instance.currPhase == "Attack")
+        if (myTurn && GameplayManager.Instance.currPhase == "Attack" && cardRef.GetComponentInChildren<Card>().canAttack)
         {
             HideCardPrompts();
             turnOrderGroup.SetActive(false);
@@ -91,6 +91,7 @@ public class CardPromptController : MonoBehaviour
     public void AttackEnemy()
     {
         GameplayManager.Instance.EnemyTakeDamage(cardRef.GetComponentInChildren<Card>().cardData.CardAttack);
+        cardRef.transform.parent.GetComponentInParent<PlayingAreaContainer>().RestCard();
         HideCardPrompts();
     }
 

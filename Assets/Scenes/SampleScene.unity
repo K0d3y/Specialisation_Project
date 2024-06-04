@@ -4621,6 +4621,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cf2b5cb4c451e3440b74a24968f396d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  playingAreas:
+  - {fileID: 1371894443}
+  - {fileID: 828438210}
+  - {fileID: 700027477}
+  - {fileID: 150000145}
+  - {fileID: 213557996}
+  - {fileID: 913904840}
   phase_text: {fileID: 2116974539}
   currPhase: 
 --- !u!1 &1266624780

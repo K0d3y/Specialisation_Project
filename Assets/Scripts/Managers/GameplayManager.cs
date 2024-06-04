@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -27,10 +28,6 @@ public class GameplayManager : MonoBehaviour
             return _instance;
         }
     }
-    private void Awake()
-    {
-        CheckInstance();
-    }
     private void CheckInstance()
     {
         if (_instance == null)
@@ -44,15 +41,20 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
+    [SerializeField] private List<PlayingAreaContainer> playingAreas;
     [SerializeField] TMP_Text phase_text;
     private EnemyHealthManager enemy;
     private PlayerController player;
     public string currPhase;
 
-    private void Start()
+    private void Awake()
     {
+        CheckInstance();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyHealthManager>();
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+    }
+    private void Start()
+    {
         StartGame();
     }
     private void StartGame()
@@ -72,15 +74,23 @@ public class GameplayManager : MonoBehaviour
         player.UpdateManaText();
         // draw card from deck
         player.DrawFromDeck(1, "HAND");
+        // change phase
         player.isMyTurn = true;
         UpdatePhaseText("Main");
+        // stand all cards
+        for (int i = 0; i < playingAreas.Count; i++)
+        {
+            playingAreas[i].StandCard();
+        }
     }
     public void DoStartAttack()
     {
+        // change phase
         UpdatePhaseText("Attack");
     }
     public void DoPassTurn()
     {
+        // change phase
         player.isMyTurn = false;
         UpdatePhaseText("End");
     }
