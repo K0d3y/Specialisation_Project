@@ -62,13 +62,40 @@ public class CardPromptController : MonoBehaviour
     }
     public void ShowPlayingAreas()
     {
-        if(myTurn && player.GetComponent<PlayerController>().manaCount >= cardRef.GetComponentInChildren<Card>().cardData.CardCost)
+        if (myTurn)
         {
-            turnOrderGroup.SetActive(false);
-            previewCard.SetActive(false);
-            playCardPrompt.SetActive(false);
-            playCardAreasPrompt.SetActive(true);
-            pabManager.UpdateValidPlayingAreas(previewCard.GetComponentInChildren<Card>().cardData, playingArea);
+            // can play
+            if (player.GetComponent<PlayerController>().manaCount >= cardRef.GetComponentInChildren<Card>().cardData.CardCost)
+            {
+                // set various panels
+                turnOrderGroup.SetActive(false);
+                previewCard.SetActive(false);
+                playCardPrompt.SetActive(false);
+                playCardAreasPrompt.SetActive(true);
+
+                // can promote
+                if (cardRef.GetComponentInChildren<Card>().cardData.CardCost2 > 0 &&
+                    player.GetComponent<PlayerController>().manaCount >= cardRef.GetComponentInChildren<Card>().cardData.CardCost2)
+                {
+                    pabManager.UpdateValidPlayingAreas(previewCard.GetComponentInChildren<Card>().cardData, playingArea, true, true);
+                }
+                // cannot promote
+                else
+                {
+                    pabManager.UpdateValidPlayingAreas(previewCard.GetComponentInChildren<Card>().cardData, playingArea, true, false);
+                }
+            }
+            // can promote
+            else if (cardRef.GetComponentInChildren<Card>().cardData.CardCost2 > 0 &&
+                    player.GetComponent<PlayerController>().manaCount >= cardRef.GetComponentInChildren<Card>().cardData.CardCost2)
+            {
+                // set various panels
+                turnOrderGroup.SetActive(false);
+                previewCard.SetActive(false);
+                playCardPrompt.SetActive(false);
+                playCardAreasPrompt.SetActive(true);
+                pabManager.UpdateValidPlayingAreas(previewCard.GetComponentInChildren<Card>().cardData, playingArea, false, true);
+            }
         }
     }
     public void ShowTargets()
@@ -83,8 +110,15 @@ public class CardPromptController : MonoBehaviour
 
     public void PlaceCardInArea(int i)
     {
-        playingArea[i].AddCardToTop(hand.TakeCard(cardRef));
-        player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost;
+        if (playingArea[i].cardList.Count > 0)
+        {
+            player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost2;
+        }
+        else
+        {
+            player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost;
+        }
+        playingArea[i].AddCardToBottom(hand.TakeCard(cardRef));
         player.GetComponent<PlayerController>().UpdateManaText();
         HideCardPrompts();
     }

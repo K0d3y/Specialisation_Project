@@ -45,6 +45,12 @@ public class HandContainer : CardContainer
     }
     public override void AddCardToBottom(GameObject card)
     {
+        if (cardList.Count == 0)
+        {
+            AddCardToTop(card);
+            return;
+        }
+
         // change card's container
         card.transform.SetParent(transform);
         if (card.GetComponentInChildren<Card>().isFlippedDown)
