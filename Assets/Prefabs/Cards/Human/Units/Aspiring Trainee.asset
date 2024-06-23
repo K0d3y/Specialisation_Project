@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e904350485fbee945a5d81eb7a5bbde6, type: 3}
-  m_Name: Novice Knight, Kain
+  m_Name: Aspiring Trainee
   m_EditorClassIdentifier: 
-  CardName: Novice Knight, Kain
+  CardName: Aspiring Trainee
   CardType: UNIT
-  CardRace: Knight
-  CardAbilty1: '[Rush].'
-  CardAbility2: 
-  CardCost: 2
-  CardCost2: 0
+  CardRace: Human
+  CardAbilty1: 
+  CardAbility2: Search your deck for units whose Rank add up to 3 and put them into
+    your hand. Shuffle your deck.
+  CardCost: 1
   CardRank: 1
-  CardAttack: 2
-  CardDefense: 2
+  CardAttack: 1
+  CardDefense: 1

@@ -10,15 +10,15 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e904350485fbee945a5d81eb7a5bbde6, type: 3}
-  m_Name: Novice Knight, Kain
+  m_Name: Equipment Master, Jones
   m_EditorClassIdentifier: 
-  CardName: Novice Knight, Kain
+  CardName: Equipment Master, Jones
   CardType: UNIT
   CardRace: Knight
-  CardAbilty1: '[Rush].'
-  CardAbility2: 
-  CardCost: 2
-  CardCost2: 0
-  CardRank: 1
-  CardAttack: 2
-  CardDefense: 2
+  CardAbilty1: "[Promote (3)] : Draw 1 card. Discard 1 card.\r"
+  CardAbility2: "\r"
+  CardCost: 4
+  CardCost2: 3
+  CardRank: 2
+  CardAttack: 3
+  CardDefense: 3

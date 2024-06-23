@@ -10,15 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e904350485fbee945a5d81eb7a5bbde6, type: 3}
-  m_Name: Novice Knight, Kain
+  m_Name: Battle Preparations
   m_EditorClassIdentifier: 
-  CardName: Novice Knight, Kain
-  CardType: UNIT
+  CardName: Battle Preparations
+  CardType: SPELL
   CardRace: Knight
-  CardAbilty1: '[Rush].'
+  CardAbilty1: Look at the top 4 cards of your deck, put up to 1 <Knight> or <Commander>
+    card from among them into your hand and the rest to the bottom of your deck in
+    any order. Shuffle your deck.
   CardAbility2: 
-  CardCost: 2
+  CardCost: 3
   CardCost2: 0
-  CardRank: 1
-  CardAttack: 2
-  CardDefense: 2
+  CardRank: 0
+  CardAttack: 0
+  CardDefense: 0

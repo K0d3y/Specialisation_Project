@@ -62,7 +62,7 @@ public class CardPromptController : MonoBehaviour
     }
     public void ShowPlayingAreas()
     {
-        if (myTurn)
+        if (myTurn && GameplayManager.Instance.currPhase == "Main")
         {
             // can play
             if (player.GetComponent<PlayerController>().manaCount >= cardRef.GetComponentInChildren<Card>().cardData.CardCost)
@@ -102,6 +102,7 @@ public class CardPromptController : MonoBehaviour
     {
         if (myTurn && GameplayManager.Instance.currPhase == "Attack" && cardRef.GetComponentInChildren<Card>().canAttack)
         {
+            Debug.Log("Can Attack");
             HideCardPrompts();
             turnOrderGroup.SetActive(false);
             attackTargetGroup.SetActive(true);
@@ -119,6 +120,7 @@ public class CardPromptController : MonoBehaviour
             player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost;
         }
         playingArea[i].AddCardToBottom(hand.TakeCard(cardRef));
+        playingArea[i].GetComponentInChildren<Card>().OnPlay();
         player.GetComponent<PlayerController>().UpdateManaText();
         HideCardPrompts();
     }

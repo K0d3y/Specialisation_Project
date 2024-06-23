@@ -1,12 +1,13 @@
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
 public class Card : MonoBehaviour
 {
-    [SerializeField] float hoverDistance = 0.5f;
+    [SerializeField] private float hoverDistance = 0.5f;
     public bool isFlippedDown = false;
     public bool isHovering = false;
-    public bool canAttack = true;
+    public bool canAttack = false;
     public CardData cardData;
 
     // card details
@@ -65,6 +66,33 @@ public class Card : MonoBehaviour
         else
         {
             isFlippedDown = true;
+        }
+    }
+
+    public void OnPlay()
+    {
+        ICardAbility[] cardAbilities = GetComponents<ICardAbility>();
+        foreach (var ability in cardAbilities)
+        {
+            ability.OnPlay();
+        }
+    }
+
+    public void OnAttack()
+    {
+        ICardAbility[] cardAbilities = GetComponents<ICardAbility>();
+        foreach (var ability in cardAbilities)
+        {
+            ability.OnAttack();
+        }
+    }
+
+    public void OnEndTurn()
+    {
+        ICardAbility[] cardAbilities = GetComponents<ICardAbility>();
+        foreach (var ability in cardAbilities)
+        {
+            ability.OnEndTurn();
         }
     }
 }

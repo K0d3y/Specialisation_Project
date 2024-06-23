@@ -10,15 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e904350485fbee945a5d81eb7a5bbde6, type: 3}
-  m_Name: Novice Knight, Kain
+  m_Name: King's Sword, Armand
   m_EditorClassIdentifier: 
-  CardName: Novice Knight, Kain
+  CardName: King's Sword, Armand
   CardType: UNIT
   CardRace: Knight
-  CardAbilty1: '[Rush].'
-  CardAbility2: 
-  CardCost: 2
-  CardCost2: 0
-  CardRank: 1
-  CardAttack: 2
-  CardDefense: 2
+  CardAbilty1: '[Promote (6)].
+
+    Leader : When a unit enters a Follower space
+    on your field, it gets [Rush].'
+  CardAbility2: Put the top card of your deck into your Resilience.
+  CardCost: 6
+  CardCost2: 6
+  CardRank: 3
+  CardAttack: 4
+  CardDefense: 4

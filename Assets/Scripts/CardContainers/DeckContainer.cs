@@ -4,7 +4,7 @@ using UnityEngine;
 public class DeckContainer : CardContainer
 {
     [SerializeField] public CardData leader;
-    [SerializeField] public List<CardData> deck;
+    [SerializeField] public List<GameObject> deck;
     [SerializeField] public List<CardData> tokens;
 
     private void Awake()
@@ -20,9 +20,9 @@ public class DeckContainer : CardContainer
     {
         for (int i = 0; i < deck.Count; i++)
         {
-            GameObject obj = Instantiate(cardPrefab);
-            obj.name = deck[i].name;
-            obj.GetComponentInChildren<Card>().cardData = deck[i];
+            GameObject obj = Instantiate(deck[i]);
+            //obj.name = deck[i].name;
+            //obj.GetComponentInChildren<Card>().cardData = deck[i];
             obj.GetComponentInChildren<Card>().FlipCard();
             obj.transform.SetParent(transform);
             cardList.Add(obj);
