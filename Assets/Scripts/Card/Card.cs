@@ -69,12 +69,21 @@ public class Card : MonoBehaviour
         }
     }
 
-    public void OnPlay()
+    public void OnSummon()
     {
         ICardAbility[] cardAbilities = GetComponents<ICardAbility>();
         foreach (var ability in cardAbilities)
         {
-            ability.OnPlay();
+            ability.OnSummon();
+        }
+    }
+
+    public void OnPromote()
+    {
+        ICardAbility[] cardAbilities = GetComponents<ICardAbility>();
+        foreach (var ability in cardAbilities)
+        {
+            ability.OnPromote();
         }
     }
 

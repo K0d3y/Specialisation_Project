@@ -93,6 +93,12 @@ public class GameplayManager : MonoBehaviour
         // change phase
         player.isMyTurn = false;
         UpdatePhaseText("End");
+
+        // activate all end of turn card abilites
+        for (int i = 0; i < playingAreas.Count; i++)
+        {
+            playingAreas[i].GetComponentInChildren<Card>().OnEndTurn();
+        }
     }
 
     private void UpdatePhaseText(string phase)

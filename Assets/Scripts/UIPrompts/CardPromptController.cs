@@ -111,16 +111,17 @@ public class CardPromptController : MonoBehaviour
 
     public void PlaceCardInArea(int i)
     {
+        playingArea[i].AddCardToBottom(hand.TakeCard(cardRef));
         if (playingArea[i].cardList.Count > 0)
         {
             player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost2;
+            cardRef.GetComponentInChildren<Card>().OnPromote();
         }
         else
         {
             player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost;
+            cardRef.GetComponentInChildren<Card>().OnSummon();
         }
-        playingArea[i].AddCardToBottom(hand.TakeCard(cardRef));
-        playingArea[i].GetComponentInChildren<Card>().OnPlay();
         player.GetComponent<PlayerController>().UpdateManaText();
         HideCardPrompts();
     }
@@ -128,6 +129,7 @@ public class CardPromptController : MonoBehaviour
     {
         GameplayManager.Instance.EnemyTakeDamage(cardRef.GetComponentInChildren<Card>().cardData.CardAttack);
         cardRef.transform.parent.GetComponentInParent<PlayingAreaContainer>().RestCard();
+        cardRef.GetComponentInChildren<Card>().OnAttack();
         HideCardPrompts();
     }
 
