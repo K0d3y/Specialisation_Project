@@ -111,16 +111,17 @@ public class CardPromptController : MonoBehaviour
 
     public void PlaceCardInArea(int i)
     {
-        playingArea[i].AddCardToBottom(hand.TakeCard(cardRef));
         if (playingArea[i].cardList.Count > 0)
         {
             player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost2;
-            cardRef.GetComponentInChildren<Card>().OnPromote();
+            playingArea[i].AddCardToBottom(hand.TakeCard(cardRef));
+            playingArea[i].cardList[0].GetComponentInChildren<Card>().OnPromote();
         }
         else
         {
             player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost;
-            cardRef.GetComponentInChildren<Card>().OnSummon();
+            playingArea[i].AddCardToBottom(hand.TakeCard(cardRef));
+            playingArea[i].cardList[0].GetComponentInChildren<Card>().OnSummon();
         }
         player.GetComponent<PlayerController>().UpdateManaText();
         HideCardPrompts();

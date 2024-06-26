@@ -63,6 +63,11 @@ public class GameplayManager : MonoBehaviour
         player.DrawFromDeck(8, "RESILIENCE");
     }
 
+    public void DrawCard(int amt)
+    {
+        player.DrawFromDeck(amt, "HAND");
+    }
+
     public void DoStartTurn()
     {
         // increase mana
@@ -80,7 +85,10 @@ public class GameplayManager : MonoBehaviour
         // stand all cards
         for (int i = 0; i < playingAreas.Count; i++)
         {
-            playingAreas[i].StandCard();
+            if (playingAreas[i].cardList.Count > 0)
+            {
+                playingAreas[i].StandCard();
+            }
         }
     }
     public void DoStartAttack()
@@ -97,7 +105,10 @@ public class GameplayManager : MonoBehaviour
         // activate all end of turn card abilites
         for (int i = 0; i < playingAreas.Count; i++)
         {
-            playingAreas[i].GetComponentInChildren<Card>().OnEndTurn();
+            if (playingAreas[i].cardList.Count > 0)
+            {
+                playingAreas[i].GetComponentInChildren<Card>().OnEndTurn();
+            }
         }
     }
 

@@ -1962,7 +1962,7 @@ GameObject:
   - component: {fileID: 7700010078346644275}
   - component: {fileID: 539287945060475206}
   - component: {fileID: 7594860737536384405}
-  - component: {fileID: 1225737108819369324}
+  - component: {fileID: 8170397246294426899}
   m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
@@ -2082,7 +2082,7 @@ MonoBehaviour:
   cardName: {fileID: 1702756879270010884}
   attack: {fileID: 9096236901995488538}
   defence: {fileID: 5871709548362691625}
---- !u!114 &1225737108819369324
+--- !u!114 &8170397246294426899
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

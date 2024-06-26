@@ -1538,6 +1538,7 @@ GameObject:
   - component: {fileID: 9003759747026639330}
   - component: {fileID: 2938564368084831433}
   - component: {fileID: 6881017704822616033}
+  - component: {fileID: 3568806256364361766}
   m_Layer: 6
   m_Name: Cube
   m_TagString: Untagged
@@ -1657,6 +1658,18 @@ MonoBehaviour:
   cardName: {fileID: 4082035291945555663}
   attack: {fileID: 7163675014265806974}
   defence: {fileID: 8805146465574553276}
+--- !u!114 &3568806256364361766
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3056370601519526323}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91fe7ea3399e24f42ba2f2d9461c297c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3218446307751340024
 GameObject:
   m_ObjectHideFlags: 0
