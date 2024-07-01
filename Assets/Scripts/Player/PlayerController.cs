@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private DiscardContainer discard;
     [SerializeField] private HandContainer hand;
     [SerializeField] private ResilienceContainer resilience;
+    [SerializeField] private List<PlayingAreaContainer> playingAreas;
     // click detection
     [SerializeField] private LayerMask cardLayerMask;
     [SerializeField] private float clickDetectionTime;
@@ -22,6 +23,9 @@ public class PlayerController : MonoBehaviour
     public int manaCount = 0;
     public int maxManaCount = 0;
     [SerializeField] private TMP_Text manaCount_text;
+    // others
+    private bool discardingCard = false;
+    public bool isPromoting = false;
 
     private void Update()
     {
@@ -55,8 +59,17 @@ public class PlayerController : MonoBehaviour
         {
             if (hit.collider.gameObject.transform.parent.parent.name == "Hand") // click on hand
             {
+                // discarding card from hand
+                if (discardingCard)
+                {
+                    discard.AddCardToTop(hit.collider.transform.parent.gameObject);
+                    discardingCard = false;
+                }
                 // preview card & ask if the player wants to play it
-                cardPromptController.ShowPlayCardPreview(hit, isMyTurn);
+                else
+                {
+                    cardPromptController.ShowPlayCardPreview(hit, isMyTurn);
+                }
             }
         }
     }
@@ -68,7 +81,10 @@ public class PlayerController : MonoBehaviour
             if (hit.collider.gameObject.transform.parent.parent.name.Contains("Space")) // click on playind area
             {
                 // show attack prompt
-                cardPromptController.ShowCardActions(hit, isMyTurn);
+                if (!isPromoting)
+                {
+                    cardPromptController.ShowCardActions(hit, isMyTurn);
+                }
             }
         }
     }
@@ -77,7 +93,7 @@ public class PlayerController : MonoBehaviour
         // click (do click code here)
         if (Input.GetMouseButtonUp(0) && clickTime > 0) // left click
         {
-
+            isPromoting = false;
         }
         else if (Input.GetMouseButtonUp(1) && clickTime > 0) // right click
         {
@@ -131,6 +147,20 @@ public class PlayerController : MonoBehaviour
                     discard.AddCardToTop(deck.TakeTopCard());
                     break;
             }
+        }
+    }
+
+    public void DiscardCardFromHand()
+    {
+        discardingCard = true;
+        cardPromptController.ShowHandGroup();
+    }
+
+    public void SendToDiscard(int playingAreaNo)
+    {
+        while (playingAreas[playingAreaNo].cardList.Count > 0)
+        {
+            discard.AddCardToTop(playingAreas[playingAreaNo].TakeTopCard());
         }
     }
 

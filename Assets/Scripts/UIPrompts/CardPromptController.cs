@@ -6,9 +6,10 @@ public class CardPromptController : MonoBehaviour
     // UI panels
     [SerializeField] private GameObject turnOrderGroup;
     [SerializeField] private GameObject playCardPrompt;
-    [SerializeField] private GameObject playCardAreasPrompt;
+    [SerializeField] public GameObject playCardAreasPrompt;
     [SerializeField] private GameObject cardActionGroup;
     [SerializeField] private GameObject attackTargetGroup;
+    [SerializeField] private GameObject handTargetGroup;
     // for card preview
     [SerializeField] private GameObject player;
     [SerializeField] private GameObject cardPrefab;
@@ -36,6 +37,9 @@ public class CardPromptController : MonoBehaviour
         previewCard = Instantiate(cardPrefab, player.transform);
         previewCard.name = hit.collider.transform.parent.gameObject.name;
         previewCard.GetComponentInChildren<Card>().cardData = hit.collider.GetComponent<Card>().cardData;
+        previewCard.GetComponentInChildren<Card>().atk = hit.collider.GetComponent<Card>().atk;
+        previewCard.GetComponentInChildren<Card>().def = hit.collider.GetComponent<Card>().def;
+        previewCard.GetComponentInChildren<Card>().UpdateCardText();
         previewCard.transform.localPosition = new Vector3(10, 0, 0);
         previewCard.transform.localScale *= 5;
         playCardPrompt.SetActive(true);
@@ -108,27 +112,40 @@ public class CardPromptController : MonoBehaviour
             attackTargetGroup.SetActive(true);
         }
     }
+    public void ShowHandGroup()
+    {
+        HideCardPrompts();
+        turnOrderGroup.SetActive(false);
+        handTargetGroup.SetActive(true);
+    }
 
     public void PlaceCardInArea(int i)
     {
+        // promote
         if (playingArea[i].cardList.Count > 0)
         {
             player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost2;
             playingArea[i].AddCardToBottom(hand.TakeCard(cardRef));
             playingArea[i].cardList[0].GetComponentInChildren<Card>().OnPromote();
+            player.GetComponent<PlayerController>().isPromoting = true;
         }
+        // summon
         else
         {
             player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost;
             playingArea[i].AddCardToBottom(hand.TakeCard(cardRef));
             playingArea[i].cardList[0].GetComponentInChildren<Card>().OnSummon();
+            if (playingArea[i].areaCardType == "SPELL")
+            {
+                player.GetComponent<PlayerController>().SendToDiscard(i);
+            }
         }
         player.GetComponent<PlayerController>().UpdateManaText();
         HideCardPrompts();
     }
     public void AttackEnemy()
     {
-        GameplayManager.Instance.EnemyTakeDamage(cardRef.GetComponentInChildren<Card>().cardData.CardAttack);
+        GameplayManager.Instance.EnemyTakeDamage(cardRef.GetComponentInChildren<Card>().atk);
         cardRef.transform.parent.GetComponentInParent<PlayingAreaContainer>().RestCard();
         cardRef.GetComponentInChildren<Card>().OnAttack();
         HideCardPrompts();

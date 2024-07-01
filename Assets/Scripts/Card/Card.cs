@@ -11,8 +11,7 @@ public class Card : MonoBehaviour
     public CardData cardData;
 
     // card details
-    [SerializeField]
-    private TMP_Text type,
+    public TMP_Text type,
                     cost,
                     rank,
                     ability1,
@@ -21,18 +20,15 @@ public class Card : MonoBehaviour
                     cardName,
                     attack,
                     defence;
+    // individual card stats
+    public int atk,
+               def;
 
     private void Start()
     {
-        type.text = cardData.CardType;
-        cost.text = cardData.CardCost.ToString();
-        rank.text = cardData.CardRank.ToString();
-        ability1.text = cardData.CardAbilty1;
-        ability2.text = cardData.CardAbility2;
-        attribute.text = cardData.CardRace;
-        cardName.text = cardData.CardName;
-        attack.text = cardData.CardAttack.ToString();
-        defence.text = cardData.CardDefense.ToString();
+        atk = cardData.CardAttack;
+        def = cardData.CardDefense;
+        UpdateCardText();
     }
 
     private void Update()
@@ -54,6 +50,19 @@ public class Card : MonoBehaviour
                 }
             }
         }
+    }
+
+    public void UpdateCardText()
+    {
+        type.text = cardData.CardType;
+        cost.text = cardData.CardCost.ToString();
+        rank.text = cardData.CardRank.ToString();
+        ability1.text = cardData.CardAbilty1;
+        ability2.text = cardData.CardAbility2;
+        attribute.text = cardData.CardRace;
+        cardName.text = cardData.CardName;
+        attack.text = atk.ToString();
+        defence.text = def.ToString();
     }
 
     public void FlipCard()

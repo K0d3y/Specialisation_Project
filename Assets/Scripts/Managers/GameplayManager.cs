@@ -68,6 +68,11 @@ public class GameplayManager : MonoBehaviour
         player.DrawFromDeck(amt, "HAND");
     }
 
+    public void DiscardCard(int amt)
+    {
+        player.DiscardCardFromHand();
+    }
+
     public void DoStartTurn()
     {
         // increase mana
@@ -121,5 +126,18 @@ public class GameplayManager : MonoBehaviour
     {
         enemy.health -= damage;
         enemy.health_text.text = enemy.health.ToString();
+    }
+
+    public void BuffCardValues(int position, int atk, int def)
+    {
+        if (playingAreas[position].cardList.Count > 0)
+        {
+            foreach (Card card in playingAreas[position].GetComponentsInChildren<Card>())
+            {
+                card.atk += atk;
+                card.def += def;
+                card.UpdateCardText();
+            }
+        }
     }
 }
