@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -11,15 +12,32 @@ public class CardPromptController : MonoBehaviour
     [SerializeField] private GameObject attackTargetGroup;
     [SerializeField] private GameObject handTargetGroup;
     // for card preview
-    [SerializeField] private GameObject player;
+    private GameObject player;
     [SerializeField] private GameObject cardPrefab;
     private GameObject previewCard;
     private GameObject cardRef;
     private bool myTurn;
     // for card playing areas
-    [SerializeField] private HandContainer hand;
+    private HandContainer hand;
     [SerializeField] private PlayingAreaButtonManager pabManager;
-    [SerializeField] private List<PlayingAreaContainer> playingArea;
+    private List<PlayingAreaContainer> playingArea = new List<PlayingAreaContainer>();
+
+    private void Start()
+    {
+        hand = GameObject.FindGameObjectWithTag("Hand").GetComponent<HandContainer>();
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("PlayingArea"))
+        {
+            playingArea.Add(obj.GetComponent<PlayingAreaContainer>());
+        }
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            if (obj.GetComponent<PhotonView>().IsMine)
+            {
+                player = obj;
+                break;
+            }
+        }
+    }
 
     public void ShowPlayCardPreview(RaycastHit hit, bool isMyTurn)
     {
@@ -40,7 +58,7 @@ public class CardPromptController : MonoBehaviour
         previewCard.GetComponentInChildren<Card>().atk = hit.collider.GetComponent<Card>().atk;
         previewCard.GetComponentInChildren<Card>().def = hit.collider.GetComponent<Card>().def;
         previewCard.GetComponentInChildren<Card>().UpdateCardText();
-        previewCard.transform.localPosition = new Vector3(10, 0, 0);
+        previewCard.transform.localPosition = new Vector3(10, 5, -5);
         previewCard.transform.localScale *= 5;
         playCardPrompt.SetActive(true);
     }
@@ -60,7 +78,7 @@ public class CardPromptController : MonoBehaviour
         previewCard = Instantiate(cardPrefab, player.transform);
         previewCard.name = hit.collider.transform.parent.gameObject.name;
         previewCard.GetComponentInChildren<Card>().cardData = hit.collider.GetComponent<Card>().cardData;
-        previewCard.transform.localPosition = new Vector3(10, 0, 0);
+        previewCard.transform.localPosition = new Vector3(10, 5, -5);
         previewCard.transform.localScale *= 5;
         cardActionGroup.SetActive(true);
     }
@@ -69,7 +87,7 @@ public class CardPromptController : MonoBehaviour
         if (myTurn && GameplayManager.Instance.currPhase == "Main")
         {
             // can play
-            if (player.GetComponent<PlayerController>().manaCount >= cardRef.GetComponentInChildren<Card>().cardData.CardCost)
+            if (GameplayManager.Instance.manaCount >= cardRef.GetComponentInChildren<Card>().cardData.CardCost)
             {
                 // set various panels
                 turnOrderGroup.SetActive(false);
@@ -79,7 +97,7 @@ public class CardPromptController : MonoBehaviour
 
                 // can promote
                 if (cardRef.GetComponentInChildren<Card>().cardData.CardCost2 > 0 &&
-                    player.GetComponent<PlayerController>().manaCount >= cardRef.GetComponentInChildren<Card>().cardData.CardCost2)
+                    GameplayManager.Instance.manaCount >= cardRef.GetComponentInChildren<Card>().cardData.CardCost2)
                 {
                     pabManager.UpdateValidPlayingAreas(previewCard.GetComponentInChildren<Card>().cardData, playingArea, true, true);
                 }
@@ -91,7 +109,7 @@ public class CardPromptController : MonoBehaviour
             }
             // can promote
             else if (cardRef.GetComponentInChildren<Card>().cardData.CardCost2 > 0 &&
-                    player.GetComponent<PlayerController>().manaCount >= cardRef.GetComponentInChildren<Card>().cardData.CardCost2)
+                    GameplayManager.Instance.manaCount >= cardRef.GetComponentInChildren<Card>().cardData.CardCost2)
             {
                 // set various panels
                 turnOrderGroup.SetActive(false);
@@ -124,7 +142,7 @@ public class CardPromptController : MonoBehaviour
         // promote
         if (playingArea[i].cardList.Count > 0)
         {
-            player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost2;
+            GameplayManager.Instance.manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost2;
             playingArea[i].AddCardToBottom(hand.TakeCard(cardRef));
             playingArea[i].cardList[0].GetComponentInChildren<Card>().OnPromote();
             player.GetComponent<PlayerController>().isPromoting = true;
@@ -132,7 +150,7 @@ public class CardPromptController : MonoBehaviour
         // summon
         else
         {
-            player.GetComponent<PlayerController>().manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost;
+            GameplayManager.Instance.manaCount -= cardRef.GetComponentInChildren<Card>().cardData.CardCost;
             playingArea[i].AddCardToBottom(hand.TakeCard(cardRef));
             playingArea[i].cardList[0].GetComponentInChildren<Card>().OnSummon();
             if (playingArea[i].areaCardType == "SPELL")
@@ -140,7 +158,7 @@ public class CardPromptController : MonoBehaviour
                 player.GetComponent<PlayerController>().SendToDiscard(i);
             }
         }
-        player.GetComponent<PlayerController>().UpdateManaText();
+        GameplayManager.Instance.UpdateManaText();
         HideCardPrompts();
     }
     public void AttackEnemy()

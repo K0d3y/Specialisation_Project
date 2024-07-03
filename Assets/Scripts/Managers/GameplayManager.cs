@@ -41,20 +41,28 @@ public class GameplayManager : MonoBehaviour
         }
     }
 
-    [SerializeField] private List<PlayingAreaContainer> playingAreas;
+    private List<PlayingAreaContainer> playingAreas = new List<PlayingAreaContainer>();
     [SerializeField] TMP_Text phase_text;
     private EnemyHealthManager enemy;
     private PlayerController player;
     public string currPhase;
 
+    public int manaCount = 0;
+    public int maxManaCount = 0;
+    [SerializeField] private TMP_Text manaCount_text;
+
     private void Awake()
     {
         CheckInstance();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyHealthManager>();
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
     }
     private void Start()
     {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("PlayingArea"))
+        {
+            playingAreas.Add(obj.GetComponent<PlayingAreaContainer>());
+        }
         StartGame();
     }
     private void StartGame()
@@ -76,12 +84,12 @@ public class GameplayManager : MonoBehaviour
     public void DoStartTurn()
     {
         // increase mana
-        if (player.maxManaCount < 10)
+        if (maxManaCount < 10)
         {
-            player.maxManaCount++;
+            maxManaCount++;
         }
-        player.manaCount = player.maxManaCount;
-        player.UpdateManaText();
+        manaCount = maxManaCount;
+        UpdateManaText();
         // draw card from deck
         player.DrawFromDeck(1, "HAND");
         // change phase
@@ -121,6 +129,10 @@ public class GameplayManager : MonoBehaviour
     {
         currPhase = phase;
         phase_text.text = currPhase + " Phase";
+    }
+    public void UpdateManaText()
+    {
+        manaCount_text.text = manaCount.ToString() + '/' + maxManaCount.ToString();
     }
     public void EnemyTakeDamage(int damage)
     {

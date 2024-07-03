@@ -15,17 +15,19 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float clickDetectionTime;
     private float clickTime;
     // preview & drag cards
-    [SerializeField] private CardPromptController cardPromptController;
+    private CardPromptController cardPromptController;
     [SerializeField] private GameObject cardHolder;
     private GameObject heldCard;
     // player values
     public bool isMyTurn = false;
-    public int manaCount = 0;
-    public int maxManaCount = 0;
-    [SerializeField] private TMP_Text manaCount_text;
     // others
     private bool discardingCard = false;
     public bool isPromoting = false;
+
+    private void Start()
+    {
+        cardPromptController = GameObject.FindGameObjectWithTag("PromptController").GetComponent<CardPromptController>();
+    }
 
     private void Update()
     {
@@ -162,10 +164,5 @@ public class PlayerController : MonoBehaviour
         {
             discard.AddCardToTop(playingAreas[playingAreaNo].TakeTopCard());
         }
-    }
-
-    public void UpdateManaText()
-    {
-        manaCount_text.text = manaCount.ToString() + '/' + maxManaCount.ToString();
     }
 }

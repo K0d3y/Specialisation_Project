@@ -13,6 +13,9 @@ TagManager:
   - UNIT
   - SPELL
   - Enemy
+  - PromptController
+  - Hand
+  - Resilience
   layers:
   - Default
   - TransparentFX
