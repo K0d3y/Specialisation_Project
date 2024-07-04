@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -24,9 +25,18 @@ public class PlayerController : MonoBehaviour
     private bool discardingCard = false;
     public bool isPromoting = false;
 
+    private PhotonView view;
+
     private void Start()
     {
+        view = GetComponent<PhotonView>();
         cardPromptController = GameObject.FindGameObjectWithTag("PromptController").GetComponent<CardPromptController>();
+
+        if (!view.IsMine)
+        {
+            transform.eulerAngles = new Vector3(0, 180, 0);
+            transform.position = new Vector3(0, 0, -10);
+        }
     }
 
     private void Update()
