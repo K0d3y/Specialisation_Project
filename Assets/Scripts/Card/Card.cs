@@ -9,6 +9,7 @@ public class Card : MonoBehaviour
     public bool isHovering = false;
     public bool canAttack = false;
     public CardData cardData;
+    public bool usebaseStats = true;
 
     // card details
     public TMP_Text type,
@@ -26,9 +27,12 @@ public class Card : MonoBehaviour
 
     private void Start()
     {
-        atk = cardData.CardAttack;
-        def = cardData.CardDefense;
-        UpdateCardText();
+        if (usebaseStats)
+        {
+            atk = cardData.CardAttack;
+            def = cardData.CardDefense;
+            UpdateCardText();
+        }
     }
 
     private void Update()
@@ -63,6 +67,7 @@ public class Card : MonoBehaviour
         cardName.text = cardData.CardName;
         attack.text = atk.ToString();
         defence.text = def.ToString();
+        Debug.Log("Text Updated.");
     }
 
     public void FlipCard()

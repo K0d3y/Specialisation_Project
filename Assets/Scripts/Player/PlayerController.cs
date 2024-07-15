@@ -74,8 +74,9 @@ public class PlayerController : MonoBehaviour
                 // discarding card from hand
                 if (discardingCard)
                 {
-                    discard.AddCardToTop(hit.collider.transform.parent.gameObject);
+                    discard.AddCardToTop(hand.TakeCard(hit.collider.transform.parent.gameObject));
                     discardingCard = false;
+                    cardPromptController.HideCardPrompts();
                 }
                 // preview card & ask if the player wants to play it
                 else
@@ -93,7 +94,7 @@ public class PlayerController : MonoBehaviour
             if (hit.collider.gameObject.transform.parent.parent.name.Contains("Space")) // click on playind area
             {
                 // show attack prompt
-                if (!isPromoting)
+                if (!isPromoting && !discardingCard)
                 {
                     cardPromptController.ShowCardActions(hit, isMyTurn);
                 }

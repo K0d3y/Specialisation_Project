@@ -12,9 +12,9 @@ public class CardPromptController : MonoBehaviour
     [SerializeField] private GameObject attackTargetGroup;
     [SerializeField] private GameObject handTargetGroup;
     // for card preview
-    private GameObject player;
+    public GameObject player;
     [SerializeField] private GameObject cardPrefab;
-    private GameObject previewCard;
+    public GameObject previewCard;
     private GameObject cardRef;
     private bool myTurn;
     // for card playing areas
@@ -55,6 +55,7 @@ public class CardPromptController : MonoBehaviour
         previewCard = Instantiate(cardPrefab, player.transform);
         previewCard.name = hit.collider.transform.parent.gameObject.name;
         previewCard.GetComponentInChildren<Card>().cardData = hit.collider.GetComponent<Card>().cardData;
+        previewCard.GetComponentInChildren<Card>().usebaseStats = false;
         previewCard.GetComponentInChildren<Card>().atk = hit.collider.GetComponent<Card>().atk;
         previewCard.GetComponentInChildren<Card>().def = hit.collider.GetComponent<Card>().def;
         previewCard.GetComponentInChildren<Card>().UpdateCardText();
@@ -78,6 +79,10 @@ public class CardPromptController : MonoBehaviour
         previewCard = Instantiate(cardPrefab, player.transform);
         previewCard.name = hit.collider.transform.parent.gameObject.name;
         previewCard.GetComponentInChildren<Card>().cardData = hit.collider.GetComponent<Card>().cardData;
+        previewCard.GetComponentInChildren<Card>().usebaseStats = false;
+        previewCard.GetComponentInChildren<Card>().atk = hit.collider.GetComponent<Card>().atk;
+        previewCard.GetComponentInChildren<Card>().def = hit.collider.GetComponent<Card>().def;
+        previewCard.GetComponentInChildren<Card>().UpdateCardText();
         previewCard.transform.localPosition = new Vector3(10, 5, -5);
         previewCard.transform.localScale *= 5;
         cardActionGroup.SetActive(true);
@@ -177,5 +182,6 @@ public class CardPromptController : MonoBehaviour
         playCardAreasPrompt.SetActive(false);
         cardActionGroup.SetActive(false);
         attackTargetGroup.SetActive(false);
+        handTargetGroup.SetActive(false);
     }
 }
