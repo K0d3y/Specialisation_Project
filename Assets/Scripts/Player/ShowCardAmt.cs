@@ -1,3 +1,4 @@
+using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
@@ -11,7 +12,8 @@ public class ShowCardAmt : MonoBehaviour
     private void Update()
     {
         RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector3.down, out hit, 100, cardLayerMask))
+        if (Physics.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector3.down, out hit, 100, cardLayerMask) && 
+            GameplayManager.Instance.player.gameObject.GetComponentInChildren<ShowCardAmt>() == this)
         {
             count = 0;
             if (hit.transform.parent.name.Contains("Deck"))

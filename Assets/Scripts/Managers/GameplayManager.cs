@@ -44,7 +44,8 @@ public class GameplayManager : MonoBehaviour
     private List<PlayingAreaContainer> playingAreas = new List<PlayingAreaContainer>();
     [SerializeField] TMP_Text phase_text;
     private EnemyHealthManager enemy;
-    private PlayerController player;
+
+    public PlayerController player;
     public string currPhase;
 
     public int manaCount = 0;

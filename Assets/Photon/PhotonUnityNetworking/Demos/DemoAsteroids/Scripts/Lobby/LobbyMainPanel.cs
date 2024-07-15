@@ -33,6 +33,7 @@ namespace Photon.Pun.Demo.Asteroids
 
         [Header("Inside Room Panel")]
         public GameObject InsideRoomPanel;
+        public GameObject InsideRoomLayoutPanel;
 
         public Button StartGameButton;
         public GameObject PlayerListEntryPrefab;
@@ -119,7 +120,7 @@ namespace Photon.Pun.Demo.Asteroids
             foreach (Player p in PhotonNetwork.PlayerList)
             {
                 GameObject entry = Instantiate(PlayerListEntryPrefab);
-                entry.transform.SetParent(InsideRoomPanel.transform);
+                entry.transform.SetParent(InsideRoomLayoutPanel.transform);
                 entry.transform.localScale = Vector3.one;
                 entry.GetComponent<PlayerListEntry>().Initialize(p.ActorNumber, p.NickName);
 
@@ -132,7 +133,7 @@ namespace Photon.Pun.Demo.Asteroids
                 playerListEntries.Add(p.ActorNumber, entry);
             }
 
-            StartGameButton.gameObject.SetActive(CheckPlayersReady());
+            StartGameButton.GetComponent<Button>().interactable = CheckPlayersReady();
 
             Hashtable props = new Hashtable
             {
@@ -157,13 +158,13 @@ namespace Photon.Pun.Demo.Asteroids
         public override void OnPlayerEnteredRoom(Player newPlayer)
         {
             GameObject entry = Instantiate(PlayerListEntryPrefab);
-            entry.transform.SetParent(InsideRoomPanel.transform);
+            entry.transform.SetParent(InsideRoomLayoutPanel.transform);
             entry.transform.localScale = Vector3.one;
             entry.GetComponent<PlayerListEntry>().Initialize(newPlayer.ActorNumber, newPlayer.NickName);
 
             playerListEntries.Add(newPlayer.ActorNumber, entry);
 
-            StartGameButton.gameObject.SetActive(CheckPlayersReady());
+            StartGameButton.GetComponent<Button>().interactable = CheckPlayersReady();
         }
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
@@ -171,14 +172,14 @@ namespace Photon.Pun.Demo.Asteroids
             Destroy(playerListEntries[otherPlayer.ActorNumber].gameObject);
             playerListEntries.Remove(otherPlayer.ActorNumber);
 
-            StartGameButton.gameObject.SetActive(CheckPlayersReady());
+            StartGameButton.GetComponent<Button>().interactable = CheckPlayersReady();
         }
 
         public override void OnMasterClientSwitched(Player newMasterClient)
         {
             if (PhotonNetwork.LocalPlayer.ActorNumber == newMasterClient.ActorNumber)
             {
-                StartGameButton.gameObject.SetActive(CheckPlayersReady());
+                StartGameButton.GetComponent<Button>().interactable = CheckPlayersReady();
             }
         }
 
@@ -199,7 +200,7 @@ namespace Photon.Pun.Demo.Asteroids
                 }
             }
 
-            StartGameButton.gameObject.SetActive(CheckPlayersReady());
+            StartGameButton.GetComponent<Button>().interactable = CheckPlayersReady();
         }
 
         #endregion
@@ -315,7 +316,7 @@ namespace Photon.Pun.Demo.Asteroids
 
         public void LocalPlayerPropertiesUpdated()
         {
-            StartGameButton.gameObject.SetActive(CheckPlayersReady());
+            StartGameButton.GetComponent<Button>().interactable = CheckPlayersReady();
         }
 
         private void SetActivePanel(string activePanel)
