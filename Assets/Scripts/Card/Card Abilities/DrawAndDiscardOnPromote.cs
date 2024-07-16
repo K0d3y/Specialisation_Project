@@ -1,21 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class DrawAndDiscardOnPromote : MonoBehaviour, ICardAbility
 {
-    public void OnSummon()
+    public void OnSummon(int i)
     {
     }
-    public void OnPromote()
+    public void OnPromote(int i)
     {
-        GameplayManager.Instance.DrawCard(1);
-        GameplayManager.Instance.DiscardCard(1);
+        GameplayManager.Instance.DrawCard(i, 1);
+        GameplayManager.Instance.DiscardCard(i);
     }
-    public void OnAttack()
+    public void OnAttack(int i)
     {
     }
-    public void OnEndTurn()
+    public void OnEndTurn(int i)
     {
     }
 }

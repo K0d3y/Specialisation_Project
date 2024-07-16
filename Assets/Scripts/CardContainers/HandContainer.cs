@@ -79,6 +79,6 @@ public class HandContainer : CardContainer
         }
 
         // center cards
-        transform.position = containerStartPos + new Vector3(((-cardOffsetX * (cardList.Count + 1)) / 2), ((-cardOffsetY * (cardList.Count + 1)) / 2), 0);
+        transform.localPosition = containerStartPos + new Vector3(((-cardOffsetX * (cardList.Count + 1)) / 2), ((-cardOffsetY * (cardList.Count + 1)) / 2), 0);
     }
 }

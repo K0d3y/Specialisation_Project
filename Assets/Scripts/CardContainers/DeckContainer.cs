@@ -11,9 +11,6 @@ public class DeckContainer : CardContainer
     {
         // initialise objects into deck list
         Init();
-        // shuffle and arrange cards
-        ShuffleContainer();
-        ResetCardOffset();
     }
 
     private void Init()

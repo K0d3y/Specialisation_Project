@@ -13,7 +13,7 @@ public class ShowCardAmt : MonoBehaviour
     {
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector3.down, out hit, 100, cardLayerMask) && 
-            GameplayManager.Instance.player.gameObject.GetComponentInChildren<ShowCardAmt>() == this)
+            GetComponent<PlayerController>().view.IsMine)
         {
             count = 0;
             if (hit.transform.parent.name.Contains("Deck"))

@@ -13,7 +13,7 @@ public class CardContainer : MonoBehaviour
 
     private void Awake()
     {
-        containerStartPos = transform.position;
+        containerStartPos = transform.localPosition;
     }
 
     public virtual void AddCardToTop(GameObject card)
@@ -97,6 +97,7 @@ public class CardContainer : MonoBehaviour
             cardList[i] = cardList[randomCard];
             cardList[randomCard] = temp;
         }
+        ResetCardOffset();
     }
 
     public virtual void ResetCardOffset()

@@ -2,18 +2,18 @@ using UnityEngine;
 
 public class RushCA : MonoBehaviour, ICardAbility
 {
-    public void OnSummon()
+    public void OnSummon(int i)
     {
         GetComponent<Card>().canAttack = true;
     }
-    public void OnPromote()
+    public void OnPromote(int i)
     {
         GetComponent<Card>().canAttack = true;
     }
-    public void OnAttack()
+    public void OnAttack(int i)
     {
     }
-    public void OnEndTurn()
+    public void OnEndTurn(int i)
     {
     }
 }

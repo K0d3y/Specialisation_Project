@@ -1,4 +1,4 @@
-using System;
+using Photon.Pun;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -43,10 +43,12 @@ public class GameplayManager : MonoBehaviour
 
     private List<PlayingAreaContainer> playingAreas = new List<PlayingAreaContainer>();
     [SerializeField] TMP_Text phase_text;
+    [SerializeField] TurnOrderController turnOrderController;
     private EnemyHealthManager enemy;
 
-    public PlayerController player;
+    public List<PlayerController> players;
     public string currPhase;
+    public int currPlayer = 0;
 
     public int manaCount = 0;
     public int maxManaCount = 0;
@@ -57,33 +59,38 @@ public class GameplayManager : MonoBehaviour
         CheckInstance();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyHealthManager>();
     }
-    private void Start()
+    public void StartGame()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerController>();
+        foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
+        {
+            players.Add(obj.GetComponent<PlayerController>());
+        }
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("PlayingArea"))
         {
             playingAreas.Add(obj.GetComponent<PlayingAreaContainer>());
         }
-        StartGame();
-    }
-    private void StartGame()
-    {
-        player.DrawFromDeck(5, "HAND");
-        player.DrawFromDeck(8, "RESILIENCE");
-    }
-
-    public void DrawCard(int amt)
-    {
-        player.DrawFromDeck(amt, "HAND");
+        foreach (PlayerController player in players)
+        {
+            player.deck.ShuffleContainer();
+            player.DrawFromDeck(5, "HAND");
+            player.DrawFromDeck(8, "RESILIENCE");
+        }
+        DoStartTurn(currPlayer);
     }
 
-    public void DiscardCard(int amt)
+    public void DrawCard(int playerNo, int amt)
     {
-        player.DiscardCardFromHand();
+        players[playerNo].DrawFromDeck(amt, "HAND");
     }
 
-    public void DoStartTurn()
+    public void DiscardCard(int playerNo)
     {
+        players[playerNo].DiscardCardFromHand();
+    }
+
+    public void DoStartTurn(int playerNo)
+    {
+        currPlayer = playerNo;
         // increase mana
         if (maxManaCount < 10)
         {
@@ -92,9 +99,9 @@ public class GameplayManager : MonoBehaviour
         manaCount = maxManaCount;
         UpdateManaText();
         // draw card from deck
-        player.DrawFromDeck(1, "HAND");
+        players[currPlayer].DrawFromDeck(1, "HAND");
         // change phase
-        player.isMyTurn = true;
+        players[currPlayer].isMyTurn = true;
         UpdatePhaseText("Main");
         // stand all cards
         for (int i = 0; i < playingAreas.Count; i++)
@@ -109,21 +116,30 @@ public class GameplayManager : MonoBehaviour
     {
         // change phase
         UpdatePhaseText("Attack");
+        turnOrderController.CycleButtons();
     }
     public void DoPassTurn()
     {
         // change phase
-        player.isMyTurn = false;
+        players[currPlayer].isMyTurn = false;
         UpdatePhaseText("End");
+        turnOrderController.CycleButtons();
 
         // activate all end of turn card abilites
         for (int i = 0; i < playingAreas.Count; i++)
         {
             if (playingAreas[i].cardList.Count > 0)
             {
-                playingAreas[i].GetComponentInChildren<Card>().OnEndTurn();
+                playingAreas[i].GetComponentInChildren<Card>().OnEndTurn(currPlayer);
             }
         }
+
+        currPlayer++;
+        if (currPlayer >= PhotonNetwork.CurrentRoom.PlayerCount)
+        {
+            currPlayer = 0;
+        }
+        players[currPlayer].view.RPC("StartTurn", RpcTarget.All, currPlayer);
     }
 
     private void UpdatePhaseText(string phase)

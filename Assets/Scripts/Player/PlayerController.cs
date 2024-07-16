@@ -1,4 +1,5 @@
 using Photon.Pun;
+using Photon.Realtime;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -6,7 +7,7 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // containers
-    [SerializeField] private DeckContainer deck;
+    [SerializeField] public DeckContainer deck;
     [SerializeField] private DiscardContainer discard;
     [SerializeField] private HandContainer hand;
     [SerializeField] private ResilienceContainer resilience;
@@ -18,14 +19,15 @@ public class PlayerController : MonoBehaviour
     // preview & drag cards
     private CardPromptController cardPromptController;
     [SerializeField] private GameObject cardHolder;
-    private GameObject heldCard;
+    public GameObject heldCard;
     // player values
     public bool isMyTurn = false;
     // others
     private bool discardingCard = false;
     public bool isPromoting = false;
+    public bool isCLickToPreview = false;
 
-    private PhotonView view;
+    public PhotonView view;
 
     private void Start()
     {
@@ -36,31 +38,41 @@ public class PlayerController : MonoBehaviour
         {
             transform.eulerAngles = new Vector3(0, 180, 0);
             transform.position = new Vector3(0, 0, -10);
+            GameplayManager.Instance.StartGame();
         }
+        cardPromptController.Init();
     }
 
     private void Update()
     {
-        cardHolder.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        cardHolder.transform.localPosition = new Vector3(cardHolder.transform.localPosition.x, 0, cardHolder.transform.localPosition.z);
-
-        RaycastHit hit;
-        if (Physics.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector3.down, out hit, 100, cardLayerMask))
+        if (view.IsMine)
         {
-            // handle detection of click or hold
-            clickTime -= Time.deltaTime;
-            if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
-            {
-                clickTime = clickDetectionTime;
-            }
+            cardHolder.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            cardHolder.transform.localPosition = new Vector3(cardHolder.transform.localPosition.x, 0, cardHolder.transform.localPosition.z);
 
-            if (isMyTurn)
+            RaycastHit hit;
+            if (Physics.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector3.down, out hit, 100, cardLayerMask))
             {
-                HandleHoldInput(hit);
-                HandleClickInput(hit);
-                HandleActionInput(hit);
+                // handle detection of click or hold
+                clickTime -= Time.deltaTime;
+                if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || Input.GetMouseButtonDown(2))
+                {
+                    clickTime = clickDetectionTime;
+                }
+
+                if (isMyTurn)
+                {
+                    HandleHoldInput(hit);
+                    HandleClickInput(hit);
+                    HandleActionInput(hit);
+                }
+                HandlePreviewInput(hit);
             }
-            HandlePreviewInput(hit);
+            else if (!isCLickToPreview && cardPromptController.playCardPrompt.activeSelf ||
+                    !isCLickToPreview && cardPromptController.cardActionGroup.activeSelf)
+            {
+                cardPromptController.HideCardPrompts();
+            }
         }
     }
 
@@ -82,8 +94,15 @@ public class PlayerController : MonoBehaviour
                 else
                 {
                     cardPromptController.ShowPlayCardPreview(hit, isMyTurn);
+                    isCLickToPreview = true;
                 }
             }
+        }
+        if (hit.collider.gameObject.transform.parent.parent.name == "Hand" &&
+            !isCLickToPreview)
+        {
+            // preview card
+            cardPromptController.ShowPlayCardPreview(hit, isMyTurn);
         }
     }
     private void HandleActionInput(RaycastHit hit)
@@ -97,7 +116,16 @@ public class PlayerController : MonoBehaviour
                 if (!isPromoting && !discardingCard)
                 {
                     cardPromptController.ShowCardActions(hit, isMyTurn);
+                    isCLickToPreview = true;
                 }
+            }
+        }
+        if (hit.collider.gameObject.transform.parent.parent.name.Contains("Space") &&
+            !isCLickToPreview)
+        {
+            if (!isPromoting && !discardingCard)
+            {
+                cardPromptController.ShowCardActions(hit, isMyTurn);
             }
         }
     }
@@ -122,25 +150,25 @@ public class PlayerController : MonoBehaviour
         // hold (do hold code here)
         if (Input.GetMouseButton(0) && clickTime <= 0) // left click
         {
-            if (hit.collider.gameObject.transform.parent.parent.name == "Hand") // click on hand
-            {
-                if (heldCard == null) // hold card
-                {
-                    heldCard = hand.TakeCard(hit.collider.gameObject.transform.parent.gameObject);
-                    heldCard.transform.SetParent(cardHolder.transform);
-                    heldCard.transform.localPosition = Vector3.zero;
-                }
-            }
+            //if (hit.collider.gameObject.transform.parent.parent.name == "Hand") // click on hand
+            //{
+            //    if (heldCard == null) // hold card
+            //    {
+            //        heldCard = hand.TakeCard(hit.collider.gameObject.transform.parent.gameObject);
+            //        heldCard.transform.SetParent(cardHolder.transform);
+            //        heldCard.transform.localPosition = Vector3.zero;
+            //    }
+            //}
         }
         // stop hold (undo any hold code here)
         if (Input.GetMouseButtonUp(0) && clickTime <= 0) // left click
         {
-            if (heldCard != null) // release card
-            {
-                hand.AddCardToTop(heldCard);
+            //if (heldCard != null) // release card
+            //{
+            //    hand.AddCardToTop(heldCard);
 
-                heldCard = null;
-            }
+            //    heldCard = null;
+            //}
         }
     }
 
@@ -173,7 +201,29 @@ public class PlayerController : MonoBehaviour
     {
         while (playingAreas[playingAreaNo].cardList.Count > 0)
         {
-            discard.AddCardToTop(playingAreas[playingAreaNo].TakeTopCard());
+            if (view.IsMine)
+            {
+                discard.AddCardToTop(playingAreas[playingAreaNo].TakeTopCard());
+            }
         }
+    }
+
+    [PunRPC]
+    public void StartTurn(int player)
+    {
+        if (view.IsMine)
+        {
+            GameplayManager.Instance.DoStartTurn(0);
+        }
+        else
+        {
+            GameplayManager.Instance.DoStartTurn(1);
+        }
+    }
+
+    [PunRPC]
+    public void PlayCard(int i, int x)
+    {
+        cardPromptController.PlayCard(i, x);
     }
 }

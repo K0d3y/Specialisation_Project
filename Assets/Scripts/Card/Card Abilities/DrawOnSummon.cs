@@ -2,17 +2,17 @@ using UnityEngine;
 
 public class DrawOnSummon : MonoBehaviour, ICardAbility
 {
-    public void OnSummon()
+    public void OnSummon(int i)
     {
-        GameplayManager.Instance.DrawCard(1);
+        GameplayManager.Instance.DrawCard(i, 1);
     }
-    public void OnPromote()
-    {
-    }
-    public void OnAttack()
+    public void OnPromote(int i)
     {
     }
-    public void OnEndTurn()
+    public void OnAttack(int i)
+    {
+    }
+    public void OnEndTurn(int i)
     {
     }
 }

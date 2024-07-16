@@ -67,7 +67,6 @@ public class Card : MonoBehaviour
         cardName.text = cardData.CardName;
         attack.text = atk.ToString();
         defence.text = def.ToString();
-        Debug.Log("Text Updated.");
     }
 
     public void FlipCard()
@@ -83,39 +82,39 @@ public class Card : MonoBehaviour
         }
     }
 
-    public void OnSummon()
+    public void OnSummon(int i)
     {
         ICardAbility[] cardAbilities = GetComponents<ICardAbility>();
         foreach (var ability in cardAbilities)
         {
-            ability.OnSummon();
+            ability.OnSummon(i);
         }
     }
 
-    public void OnPromote()
+    public void OnPromote(int i)
     {
         ICardAbility[] cardAbilities = GetComponents<ICardAbility>();
         foreach (var ability in cardAbilities)
         {
-            ability.OnPromote();
+            ability.OnPromote(i);
         }
     }
 
-    public void OnAttack()
+    public void OnAttack(int i)
     {
         ICardAbility[] cardAbilities = GetComponents<ICardAbility>();
         foreach (var ability in cardAbilities)
         {
-            ability.OnAttack();
+            ability.OnAttack(i);
         }
     }
 
-    public void OnEndTurn()
+    public void OnEndTurn(int i)
     {
         ICardAbility[] cardAbilities = GetComponents<ICardAbility>();
         foreach (var ability in cardAbilities)
         {
-            ability.OnEndTurn();
+            ability.OnEndTurn(i);
         }
     }
 }
