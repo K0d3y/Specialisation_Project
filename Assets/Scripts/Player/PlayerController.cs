@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour
     public GameObject heldCard;
     // player values
     public bool isMyTurn = false;
+    public int manaCount = 0;
+    public int maxManaCount = 0;
     // others
     private bool discardingCard = false;
     public bool isPromoting = false;
@@ -39,9 +41,9 @@ public class PlayerController : MonoBehaviour
         {
             transform.eulerAngles = new Vector3(0, 180, 0);
             transform.position = new Vector3(0, 0, -10);
-            GameplayManager.Instance.StartGame(view.ViewID);
+            cardPromptController.Init();
+            GameplayManager.Instance.StartGame();
         }
-        cardPromptController.Init();
     }
 
     private void Update()
@@ -216,8 +218,8 @@ public class PlayerController : MonoBehaviour
     }
 
     [PunRPC]
-    public void PlayCard(int i, int x)
+    public void PlayCard(int i, int x, bool isSelf)
     {
-        cardPromptController.PlayCard(i, x);
+        cardPromptController.PlayCard(i, x, isSelf);
     }
 }

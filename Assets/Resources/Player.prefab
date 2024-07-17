@@ -240,6 +240,8 @@ MonoBehaviour:
   cardHolder: {fileID: 950034100609805593}
   heldCard: {fileID: 0}
   isMyTurn: 0
+  manaCount: 0
+  maxManaCount: 0
   isPromoting: 0
   isCLickToPreview: 0
   view: {fileID: 0}

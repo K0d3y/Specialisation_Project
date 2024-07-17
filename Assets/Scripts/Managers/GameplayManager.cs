@@ -51,8 +51,6 @@ public class GameplayManager : MonoBehaviour
     public string currPhase;
     public int currPlayer = 0;
 
-    public int manaCount = 0;
-    public int maxManaCount = 0;
     [SerializeField] private TMP_Text manaCount_text;
 
     private void Awake()
@@ -60,7 +58,7 @@ public class GameplayManager : MonoBehaviour
         CheckInstance();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyHealthManager>();
     }
-    public void StartGame(int playerID)
+    public void StartGame()
     {
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
         {
@@ -79,15 +77,10 @@ public class GameplayManager : MonoBehaviour
 
         if (PhotonNetwork.IsMasterClient)
         {
-            currPlayer = playerID;
-            players[currPlayer].view.RPC("StartTurn", RpcTarget.All);
-        }
-        else
-        {
-            currPlayer = playerID;
             PlayerController temp = players[0];
             players[0] = players[1];
             players[1] = temp;
+            players[0].view.RPC("StartTurn", RpcTarget.All);
         }
     }
 
@@ -103,18 +96,23 @@ public class GameplayManager : MonoBehaviour
 
     public void DoStartTurn()
     {
+        // change player turn
+        players[currPlayer].isMyTurn = false;
         currPlayer++;
         if (currPlayer >= PhotonNetwork.CurrentRoom.PlayerCount)
         {
             currPlayer = 0;
         }
         // increase mana
-        if (maxManaCount < 10)
+        if (players[currPlayer].maxManaCount < 10)
         {
-            maxManaCount++;
+            players[currPlayer].maxManaCount++;
         }
-        manaCount = maxManaCount;
-        UpdateManaText();
+        players[currPlayer].manaCount = players[currPlayer].maxManaCount;
+        if (players[currPlayer].view.IsMine)
+        {
+            UpdateManaText();
+        }
         // draw card from deck
         players[currPlayer].DrawFromDeck(1, "HAND");
         // change phase
@@ -128,7 +126,9 @@ public class GameplayManager : MonoBehaviour
                 playingAreas[i].StandCard();
             }
         }
-        cardPromptController.HideCardPrompts();
+
+        // update button
+        cardPromptController.UpdateTurnOrderButton();
     }
     public void DoStartAttack()
     {
@@ -162,7 +162,7 @@ public class GameplayManager : MonoBehaviour
     }
     public void UpdateManaText()
     {
-        manaCount_text.text = manaCount.ToString() + '/' + maxManaCount.ToString();
+        manaCount_text.text = players[currPlayer].manaCount.ToString() + '/' + players[currPlayer].maxManaCount.ToString();
     }
     public void EnemyTakeDamage(int damage)
     {
@@ -180,6 +180,50 @@ public class GameplayManager : MonoBehaviour
                 card.def += def;
                 card.UpdateCardText();
             }
+        }
+    }
+    
+    public int GetCurrMana()
+    {
+        return players[currPlayer].manaCount;
+    }
+    public void SetCurrMana(int m)
+    {
+        players[currPlayer].manaCount = m;
+        if (m < 0)
+        {
+            players[currPlayer].manaCount = 0;
+        }
+        else if (m > 10)
+        {
+            players[currPlayer].manaCount = 10;
+        }
+    }
+
+    public int GetOtherMana()
+    {
+        int i = currPlayer + 1;
+        if (i >= PhotonNetwork.CurrentRoom.PlayerCount)
+        {
+            i = 0;
+        }
+        return players[i].manaCount;
+    }
+    public void SetOtherMana(int m)
+    {
+        int i = currPlayer + 1;
+        if (i >= PhotonNetwork.CurrentRoom.PlayerCount)
+        {
+            i = 0;
+        }
+        players[i].manaCount = m;
+        if (m < 0)
+        {
+            players[i].manaCount = 0;
+        }
+        else if (m > 10)
+        {
+            players[i].manaCount = 10;
         }
     }
 }
