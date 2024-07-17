@@ -34,11 +34,12 @@ public class PlayerController : MonoBehaviour
         view = GetComponent<PhotonView>();
         cardPromptController = GameObject.FindGameObjectWithTag("PromptController").GetComponent<CardPromptController>();
 
+        isMyTurn = PhotonNetwork.IsMasterClient;
         if (!view.IsMine)
         {
             transform.eulerAngles = new Vector3(0, 180, 0);
             transform.position = new Vector3(0, 0, -10);
-            GameplayManager.Instance.StartGame();
+            GameplayManager.Instance.StartGame(view.ViewID);
         }
         cardPromptController.Init();
     }
@@ -209,16 +210,9 @@ public class PlayerController : MonoBehaviour
     }
 
     [PunRPC]
-    public void StartTurn(int player)
+    public void StartTurn()
     {
-        if (view.IsMine)
-        {
-            GameplayManager.Instance.DoStartTurn(0);
-        }
-        else
-        {
-            GameplayManager.Instance.DoStartTurn(1);
-        }
+        GameplayManager.Instance.DoStartTurn();
     }
 
     [PunRPC]

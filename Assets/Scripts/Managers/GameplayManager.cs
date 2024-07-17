@@ -44,6 +44,7 @@ public class GameplayManager : MonoBehaviour
     private List<PlayingAreaContainer> playingAreas = new List<PlayingAreaContainer>();
     [SerializeField] TMP_Text phase_text;
     [SerializeField] TurnOrderController turnOrderController;
+    [SerializeField] private CardPromptController cardPromptController;
     private EnemyHealthManager enemy;
 
     public List<PlayerController> players;
@@ -59,7 +60,7 @@ public class GameplayManager : MonoBehaviour
         CheckInstance();
         enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyHealthManager>();
     }
-    public void StartGame()
+    public void StartGame(int playerID)
     {
         foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Player"))
         {
@@ -75,7 +76,19 @@ public class GameplayManager : MonoBehaviour
             player.DrawFromDeck(5, "HAND");
             player.DrawFromDeck(8, "RESILIENCE");
         }
-        DoStartTurn(currPlayer);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            currPlayer = playerID;
+            players[currPlayer].view.RPC("StartTurn", RpcTarget.All);
+        }
+        else
+        {
+            currPlayer = playerID;
+            PlayerController temp = players[0];
+            players[0] = players[1];
+            players[1] = temp;
+        }
     }
 
     public void DrawCard(int playerNo, int amt)
@@ -88,9 +101,13 @@ public class GameplayManager : MonoBehaviour
         players[playerNo].DiscardCardFromHand();
     }
 
-    public void DoStartTurn(int playerNo)
+    public void DoStartTurn()
     {
-        currPlayer = playerNo;
+        currPlayer++;
+        if (currPlayer >= PhotonNetwork.CurrentRoom.PlayerCount)
+        {
+            currPlayer = 0;
+        }
         // increase mana
         if (maxManaCount < 10)
         {
@@ -111,6 +128,7 @@ public class GameplayManager : MonoBehaviour
                 playingAreas[i].StandCard();
             }
         }
+        cardPromptController.HideCardPrompts();
     }
     public void DoStartAttack()
     {
@@ -134,12 +152,7 @@ public class GameplayManager : MonoBehaviour
             }
         }
 
-        currPlayer++;
-        if (currPlayer >= PhotonNetwork.CurrentRoom.PlayerCount)
-        {
-            currPlayer = 0;
-        }
-        players[currPlayer].view.RPC("StartTurn", RpcTarget.All, currPlayer);
+        players[currPlayer].view.RPC("StartTurn", RpcTarget.All);
     }
 
     private void UpdatePhaseText(string phase)

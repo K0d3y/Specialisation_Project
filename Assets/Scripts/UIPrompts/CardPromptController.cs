@@ -5,7 +5,7 @@ using UnityEngine;
 public class CardPromptController : MonoBehaviour
 {
     // UI panels
-    [SerializeField] private GameObject turnOrderGroup;
+    [SerializeField] public GameObject turnOrderGroup;
     [SerializeField] public GameObject playCardPrompt;
     [SerializeField] public GameObject playCardAreasPrompt;
     [SerializeField] public GameObject cardActionGroup;
@@ -61,6 +61,9 @@ public class CardPromptController : MonoBehaviour
                 oppPlayingArea.Add(obj.GetComponent<PlayingAreaContainer>());
             }
         }
+
+        myTurn = player.GetComponent<PlayerController>().isMyTurn;
+        HideCardPrompts();
     }
 
     public void ShowPlayCardPreview(RaycastHit hit, bool isMyTurn)
@@ -244,7 +247,7 @@ public class CardPromptController : MonoBehaviour
     public void HideCardPrompts()
     {
         player.GetComponent<PlayerController>().isCLickToPreview = false;
-        turnOrderGroup.SetActive(true);
+        turnOrderGroup.SetActive(myTurn);
         Destroy(previewCard.gameObject);
         playCardPrompt.SetActive(false);
         playCardAreasPrompt.SetActive(false);
