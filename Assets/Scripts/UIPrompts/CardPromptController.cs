@@ -1,7 +1,6 @@
 using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.XR;
 
 public class CardPromptController : MonoBehaviour
 {
@@ -13,13 +12,13 @@ public class CardPromptController : MonoBehaviour
     [SerializeField] private GameObject attackTargetGroup;
     [SerializeField] private GameObject handTargetGroup;
     // for card preview
-    public List<GameObject> player;
+    public List<GameObject> player = new List<GameObject>();
     [SerializeField] private GameObject cardPrefab;
     public GameObject previewCard;
     private GameObject cardRef;
     private bool myTurn;
     // for card playing areas
-    private List<HandContainer> playerHand;
+    private List<HandContainer> playerHand = new List<HandContainer>();
     [SerializeField] private PlayingAreaButtonManager pabManager;
     private List<PlayingAreaContainer> playingAreas = new List<PlayingAreaContainer>();
 
@@ -64,7 +63,10 @@ public class CardPromptController : MonoBehaviour
         previewCard.GetComponentInChildren<Card>().UpdateCardText();
         previewCard.transform.localPosition = new Vector3(10, 5, -5);
         previewCard.transform.localScale *= 5;
-        playCardPrompt.SetActive(true);
+        if (isMyTurn)
+        {
+            playCardPrompt.SetActive(true);
+        }
         player[0].GetComponent<PlayerController>().heldCard = cardRef;
     }
     public void ShowCardActions(RaycastHit hit, bool isMyTurn)
@@ -89,7 +91,17 @@ public class CardPromptController : MonoBehaviour
         previewCard.GetComponentInChildren<Card>().UpdateCardText();
         previewCard.transform.localPosition = new Vector3(10, 5, -5);
         previewCard.transform.localScale *= 5;
-        cardActionGroup.SetActive(true);
+        if (isMyTurn)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                if (playingAreas[i].cardList.Count != 0 && playingAreas[i].cardList[0] == cardRef)
+                {
+                    cardActionGroup.SetActive(true);
+                    break;
+                }
+            }
+        }
         player[0].GetComponent<PlayerController>().heldCard = cardRef;
     }
     public void ShowPlayingAreas()
@@ -191,6 +203,7 @@ public class CardPromptController : MonoBehaviour
         else if (!isSelf)
         {
             cardRef = playerHand[1].cardList[x];
+            i += 6;
 
             // promote
             if (playingAreas[i].cardList.Count > 0)

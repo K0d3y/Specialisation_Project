@@ -68,19 +68,37 @@ public class GameplayManager : MonoBehaviour
         {
             playingAreas.Add(obj.GetComponent<PlayingAreaContainer>());
         }
-        foreach (PlayerController player in players)
-        {
-            player.deck.ShuffleContainer();
-            player.DrawFromDeck(5, "HAND");
-            player.DrawFromDeck(8, "RESILIENCE");
-        }
 
         if (PhotonNetwork.IsMasterClient)
         {
+            int seed1 = Random.Range(0, 999999999);
+            int seed2 = Random.Range(0, 999999999);
+            players[1].view.RPC("ShuffleDeck", RpcTarget.All, seed1, seed2);
+
             PlayerController temp = players[0];
             players[0] = players[1];
             players[1] = temp;
             players[0].view.RPC("StartTurn", RpcTarget.All);
+        }
+    }
+
+    public void ShuffleDeck(int s1, int s2)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            players[1].deck.ShuffleContainer(s1);
+            players[0].deck.ShuffleContainer(s2);
+        }
+        else
+        {
+            players[0].deck.ShuffleContainer(s1);
+            players[1].deck.ShuffleContainer(s2);
+        }
+
+        foreach (PlayerController player in players)
+        {
+            player.DrawFromDeck(5, "HAND");
+            player.DrawFromDeck(8, "RESILIENCE");
         }
     }
 

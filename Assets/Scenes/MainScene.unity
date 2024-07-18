@@ -3504,11 +3504,12 @@ MonoBehaviour:
   cardActionGroup: {fileID: 1772679968}
   attackTargetGroup: {fileID: 2003042934}
   handTargetGroup: {fileID: 2008898628}
-  player: {fileID: 0}
+  player: []
   cardPrefab: {fileID: 2568736466622194753, guid: 2fbc03f2cc92e7443b3d2a1157561875, type: 3}
   previewCard: {fileID: 0}
+  playerHand: []
   pabManager: {fileID: 835357272}
-  opponent: {fileID: 0}
+  playingAreas: []
 --- !u!1 &1233496138
 GameObject:
   m_ObjectHideFlags: 0
@@ -3692,8 +3693,6 @@ MonoBehaviour:
   players: []
   currPhase: 
   currPlayer: 0
-  manaCount: 0
-  maxManaCount: 0
   manaCount_text: {fileID: 1779644982}
 --- !u!1 &1266624780
 GameObject:

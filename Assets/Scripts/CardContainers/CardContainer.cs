@@ -88,8 +88,10 @@ public class CardContainer : MonoBehaviour
         return card;
     }
 
-    public void ShuffleContainer()
+    public void ShuffleContainer(int seed)
     {
+        Random.seed = seed;
+
         for (int i = 0; i < cardList.Count; i++)
         {
             GameObject temp = cardList[i];

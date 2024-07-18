@@ -1,7 +1,5 @@
 using Photon.Pun;
-using Photon.Realtime;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -67,12 +65,11 @@ public class PlayerController : MonoBehaviour
                 {
                     HandleHoldInput(hit);
                     HandleClickInput(hit);
-                    HandleActionInput(hit);
                 }
+                HandleActionInput(hit);
                 HandlePreviewInput(hit);
             }
-            else if (!isCLickToPreview && cardPromptController.playCardPrompt.activeSelf ||
-                    !isCLickToPreview && cardPromptController.cardActionGroup.activeSelf)
+            else if (!isCLickToPreview && cardPromptController.previewCard != null)
             {
                 cardPromptController.HideCardPrompts();
             }
@@ -84,7 +81,7 @@ public class PlayerController : MonoBehaviour
         // click (do click code here)
         if (Input.GetMouseButtonUp(0) && clickTime > 0) // left click
         {
-            if (hit.collider.gameObject.transform.parent.parent.name == "Hand") // click on hand
+            if (hit.collider.gameObject.transform.parent.parent.name == "Hand" && isMyTurn) // click on hand
             {
                 // discarding card from hand
                 if (discardingCard)
@@ -113,7 +110,7 @@ public class PlayerController : MonoBehaviour
         // click (do click code here)
         if (Input.GetMouseButtonUp(0) && clickTime > 0) // left click
         {
-            if (hit.collider.gameObject.transform.parent.parent.name.Contains("Space")) // click on playind area
+            if (hit.collider.gameObject.transform.parent.parent.name.Contains("Space") && isMyTurn) // click on playind area
             {
                 // show attack prompt
                 if (!isPromoting && !discardingCard)
@@ -126,6 +123,7 @@ public class PlayerController : MonoBehaviour
         if (hit.collider.gameObject.transform.parent.parent.name.Contains("Space") &&
             !isCLickToPreview)
         {
+            Debug.Log("Hit");
             if (!isPromoting && !discardingCard)
             {
                 cardPromptController.ShowCardActions(hit, isMyTurn);
@@ -209,6 +207,12 @@ public class PlayerController : MonoBehaviour
                 discard.AddCardToTop(playingAreas[playingAreaNo].TakeTopCard());
             }
         }
+    }
+
+    [PunRPC]
+    public void ShuffleDeck(int s1, int s2)
+    {
+        GameplayManager.Instance.ShuffleDeck(s1, s2);
     }
 
     [PunRPC]
