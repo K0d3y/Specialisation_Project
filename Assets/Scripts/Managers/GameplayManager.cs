@@ -45,7 +45,6 @@ public class GameplayManager : MonoBehaviour
     [SerializeField] TMP_Text phase_text;
     [SerializeField] TurnOrderController turnOrderController;
     [SerializeField] private CardPromptController cardPromptController;
-    private EnemyHealthManager enemy;
 
     public List<PlayerController> players;
     public string currPhase;
@@ -56,7 +55,6 @@ public class GameplayManager : MonoBehaviour
     private void Awake()
     {
         CheckInstance();
-        enemy = GameObject.FindGameObjectWithTag("Enemy").GetComponent<EnemyHealthManager>();
     }
     public void StartGame()
     {
@@ -182,11 +180,6 @@ public class GameplayManager : MonoBehaviour
     {
         manaCount_text.text = players[currPlayer].manaCount.ToString() + '/' + players[currPlayer].maxManaCount.ToString();
     }
-    public void EnemyTakeDamage(int damage)
-    {
-        enemy.health -= damage;
-        enemy.health_text.text = enemy.health.ToString();
-    }
 
     public void BuffCardValues(int position, int atk, int def)
     {
@@ -205,6 +198,7 @@ public class GameplayManager : MonoBehaviour
     {
         return players[currPlayer].manaCount;
     }
+
     public void SetCurrMana(int m)
     {
         players[currPlayer].manaCount = m;
@@ -227,6 +221,7 @@ public class GameplayManager : MonoBehaviour
         }
         return players[i].manaCount;
     }
+
     public void SetOtherMana(int m)
     {
         int i = currPlayer + 1;

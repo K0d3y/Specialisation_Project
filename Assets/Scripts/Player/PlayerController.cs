@@ -26,6 +26,7 @@ public class PlayerController : MonoBehaviour
     private bool discardingCard = false;
     public bool isPromoting = false;
     public bool isCLickToPreview = false;
+    public bool isAttacking = false;
 
     public PhotonView view;
 
@@ -61,13 +62,13 @@ public class PlayerController : MonoBehaviour
                     clickTime = clickDetectionTime;
                 }
 
+                HandleActionInput(hit);
+                HandlePreviewInput(hit);
                 if (isMyTurn)
                 {
                     HandleHoldInput(hit);
                     HandleClickInput(hit);
                 }
-                HandleActionInput(hit);
-                HandlePreviewInput(hit);
             }
             else if (!isCLickToPreview && cardPromptController.previewCard != null)
             {
@@ -101,8 +102,10 @@ public class PlayerController : MonoBehaviour
         if (hit.collider.gameObject.transform.parent.parent.name == "Hand" &&
             !isCLickToPreview)
         {
-            // preview card
-            cardPromptController.ShowPlayCardPreview(hit, isMyTurn);
+            if (!isPromoting && !discardingCard && !isAttacking)
+            {
+                cardPromptController.ShowPlayCardPreview(hit, isMyTurn);
+            }
         }
     }
     private void HandleActionInput(RaycastHit hit)
@@ -113,7 +116,7 @@ public class PlayerController : MonoBehaviour
             if (hit.collider.gameObject.transform.parent.parent.name.Contains("Space") && isMyTurn) // click on playind area
             {
                 // show attack prompt
-                if (!isPromoting && !discardingCard)
+                if (!isPromoting && !discardingCard && !isAttacking)
                 {
                     cardPromptController.ShowCardActions(hit, isMyTurn);
                     isCLickToPreview = true;
@@ -123,8 +126,7 @@ public class PlayerController : MonoBehaviour
         if (hit.collider.gameObject.transform.parent.parent.name.Contains("Space") &&
             !isCLickToPreview)
         {
-            Debug.Log("Hit");
-            if (!isPromoting && !discardingCard)
+            if (!isPromoting && !discardingCard && !isAttacking)
             {
                 cardPromptController.ShowCardActions(hit, isMyTurn);
             }
@@ -136,6 +138,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetMouseButtonUp(0) && clickTime > 0) // left click
         {
             isPromoting = false;
+            isAttacking = false;
         }
         else if (Input.GetMouseButtonUp(1) && clickTime > 0) // right click
         {
@@ -200,12 +203,13 @@ public class PlayerController : MonoBehaviour
 
     public void SendToDiscard(int playingAreaNo)
     {
+        if (playingAreaNo >= 6)
+        {
+            playingAreaNo -= 6;
+        }
         while (playingAreas[playingAreaNo].cardList.Count > 0)
         {
-            if (view.IsMine)
-            {
-                discard.AddCardToTop(playingAreas[playingAreaNo].TakeTopCard());
-            }
+            discard.AddCardToTop(playingAreas[playingAreaNo].TakeTopCard());
         }
     }
 
@@ -225,5 +229,11 @@ public class PlayerController : MonoBehaviour
     public void PlayCard(int i, int x, bool isSelf)
     {
         cardPromptController.PlayCard(i, x, isSelf);
+    }
+
+    [PunRPC]
+    public void AttackCard(int attackingSpace, int attackedSpace, bool isSelf)
+    {
+        cardPromptController.AttackCard(attackingSpace, attackedSpace, isSelf);
     }
 }

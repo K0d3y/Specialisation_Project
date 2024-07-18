@@ -42,6 +42,7 @@ MonoBehaviour:
   - PlayCard
   - StartTurn
   - ShuffleDeck
+  - AttackCard
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

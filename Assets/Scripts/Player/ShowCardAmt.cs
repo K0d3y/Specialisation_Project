@@ -1,4 +1,3 @@
-using Photon.Pun;
 using TMPro;
 using UnityEngine;
 
@@ -18,15 +17,15 @@ public class ShowCardAmt : MonoBehaviour
             count = 0;
             if (hit.transform.parent.name.Contains("Deck"))
             {
-                count = GetComponentInChildren<DeckContainer>().cardList.Count;
+                count = hit.transform.gameObject.GetComponentInParent<DeckContainer>().cardList.Count;
             }
             else if (hit.transform.parent.name == "Discard")
             {
-                count = GetComponentInChildren<DiscardContainer>().cardList.Count;
+                count = hit.transform.gameObject.GetComponentInParent<DiscardContainer>().cardList.Count;
             }
-            if (hit.transform.parent.name == "Resilience")
+            else if (hit.transform.parent.name == "Resilience")
             {
-                count = GetComponentInChildren<ResilienceContainer>().cardList.Count;
+                count = hit.transform.gameObject.GetComponentInParent<ResilienceContainer>().cardList.Count;
             }
             text.gameObject.SetActive(true);
             text.text = count.ToString();

@@ -20,6 +20,7 @@ public class CardPromptController : MonoBehaviour
     // for card playing areas
     private List<HandContainer> playerHand = new List<HandContainer>();
     [SerializeField] private PlayingAreaButtonManager pabManager;
+    [SerializeField] private TargetAreaButtonManager tabManager;
     private List<PlayingAreaContainer> playingAreas = new List<PlayingAreaContainer>();
 
     public void Init()
@@ -69,6 +70,7 @@ public class CardPromptController : MonoBehaviour
         }
         player[0].GetComponent<PlayerController>().heldCard = cardRef;
     }
+
     public void ShowCardActions(RaycastHit hit, bool isMyTurn)
     {
         if (playCardAreasPrompt.activeSelf)
@@ -104,6 +106,7 @@ public class CardPromptController : MonoBehaviour
         }
         player[0].GetComponent<PlayerController>().heldCard = cardRef;
     }
+
     public void ShowPlayingAreas()
     {
         if (myTurn && GameplayManager.Instance.currPhase == "Main")
@@ -142,16 +145,7 @@ public class CardPromptController : MonoBehaviour
             }
         }
     }
-    public void ShowTargets()
-    {
-        if (myTurn && GameplayManager.Instance.currPhase == "Attack" && cardRef.GetComponentInChildren<Card>().canAttack)
-        {
-            Debug.Log("Can Attack");
-            HideCardPrompts();
-            turnOrderGroup.SetActive(false);
-            attackTargetGroup.SetActive(true);
-        }
-    }
+
     public void ShowHandGroup()
     {
         HideCardPrompts();
@@ -174,6 +168,7 @@ public class CardPromptController : MonoBehaviour
         PlayCard(i, x, true);
         player[0].GetComponent<PhotonView>().RPC("PlayCard", RpcTarget.Others, i, x, false);
     }
+
     public void PlayCard(int i, int x, bool isSelf)
     {
         if (isSelf && player[0].GetComponent<PlayerController>().view.IsMine)
@@ -183,7 +178,7 @@ public class CardPromptController : MonoBehaviour
             {
                 GameplayManager.Instance.SetCurrMana(GameplayManager.Instance.GetCurrMana() - cardRef.GetComponentInChildren<Card>().cardData.CardCost2);
                 playingAreas[i].AddCardToBottom(playerHand[0].TakeCard(cardRef));
-                playingAreas[i].cardList[0].GetComponentInChildren<Card>().OnPromote(1);
+                playingAreas[i].cardList[0].GetComponentInChildren<Card>().OnPromote(0);
                 player[0].GetComponent<PlayerController>().isPromoting = true;
             }
             // summon
@@ -191,7 +186,7 @@ public class CardPromptController : MonoBehaviour
             {
                 GameplayManager.Instance.SetCurrMana(GameplayManager.Instance.GetCurrMana() - cardRef.GetComponentInChildren<Card>().cardData.CardCost);
                 playingAreas[i].AddCardToBottom(playerHand[0].TakeCard(cardRef));
-                playingAreas[i].cardList[0].GetComponentInChildren<Card>().OnSummon(1);
+                playingAreas[i].cardList[0].GetComponentInChildren<Card>().OnSummon(0);
                 if (playingAreas[i].areaCardType == "SPELL")
                 {
                     player[0].GetComponent<PlayerController>().SendToDiscard(i);
@@ -227,12 +222,89 @@ public class CardPromptController : MonoBehaviour
         }
     }
 
-    public void AttackEnemy()
+    public void ShowTargets()
     {
-        GameplayManager.Instance.EnemyTakeDamage(cardRef.GetComponentInChildren<Card>().atk);
-        cardRef.transform.parent.GetComponentInParent<PlayingAreaContainer>().RestCard();
-        cardRef.GetComponentInChildren<Card>().OnAttack(player[0].GetComponent<PlayerController>().view.ViewID);
-        HideCardPrompts();
+        if (myTurn && GameplayManager.Instance.currPhase == "Attack" && cardRef.GetComponentInChildren<Card>().canAttack)
+        {
+            turnOrderGroup.SetActive(false);
+            previewCard.SetActive(false);
+            cardActionGroup.SetActive(false);
+            attackTargetGroup.SetActive(true);
+            tabManager.UpdateValidPlayingAreas(playingAreas);
+        }
+    }
+
+    public void Attack(int attackedSpace)
+    {
+        int x = 0;
+        for (int j = 0; j < playingAreas.Count - 6; j++)
+        {
+            if (playingAreas[j].cardList.Count > 0 && playingAreas[j].cardList[0] == cardRef)
+            {
+                x = j;
+                break;
+            }
+        }
+
+        AttackCard(x, attackedSpace, true);
+        player[0].GetComponent<PhotonView>().RPC("AttackCard", RpcTarget.Others, x, attackedSpace, false);
+    }
+
+    public void AttackCard(int attackingSpace, int attackedSpace, bool isSelf)
+    {
+        if (isSelf && player[0].GetComponent<PlayerController>().view.IsMine)
+        {
+            attackedSpace += 6;
+            player[0].GetComponent<PlayerController>().isAttacking = true;
+        }
+        if (!isSelf)
+        {
+            attackingSpace += 6;
+            player[0].GetComponent<PlayerController>().isAttacking = true;
+        }
+
+        playingAreas[attackingSpace].RestCard();
+        playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().OnAttack(1);
+
+        // do damage code
+        playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().def -= playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().atk;
+        playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().def -= playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().atk;
+        if (playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().def <= 0)
+        {
+            if (isSelf)
+            {
+                player[1].GetComponent<PlayerController>().SendToDiscard(attackedSpace);
+            }
+            else
+            {
+                player[0].GetComponent<PlayerController>().SendToDiscard(attackedSpace);
+            }
+        }
+        else
+        {
+            playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().UpdateCardText();
+        }
+        if (playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().def <= 0)
+        {
+            if (isSelf)
+            {
+                player[0].GetComponent<PlayerController>().SendToDiscard(attackingSpace);
+            }
+            else
+            {
+                player[1].GetComponent<PlayerController>().SendToDiscard(attackingSpace);
+            }
+        }
+        else
+        {
+            playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().UpdateCardText();
+        }
+
+        if (isSelf && player[0].GetComponent<PlayerController>().view.IsMine)
+        {
+            GameplayManager.Instance.UpdateManaText();
+            HideCardPrompts();
+        }
     }
 
     public void HideCardPrompts()
