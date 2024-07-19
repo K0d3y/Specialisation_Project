@@ -82,7 +82,9 @@ public class PlayerController : MonoBehaviour
         // click (do click code here)
         if (Input.GetMouseButtonUp(0) && clickTime > 0) // left click
         {
-            if (hit.collider.gameObject.transform.parent.parent.name == "Hand" && isMyTurn) // click on hand
+            if (hit.collider.gameObject.transform.parent.parent.name == "Hand" &&
+            hit.collider.gameObject.transform.parent.parent.parent.parent.GetComponent<PlayerController>() == this &&
+            isMyTurn) // click on hand
             {
                 // discarding card from hand
                 if (discardingCard)
@@ -100,6 +102,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         if (hit.collider.gameObject.transform.parent.parent.name == "Hand" &&
+            hit.collider.gameObject.transform.parent.parent.parent.parent.GetComponent<PlayerController>() == this &&
             !isCLickToPreview)
         {
             if (!isPromoting && !discardingCard && !isAttacking)
@@ -193,6 +196,13 @@ public class PlayerController : MonoBehaviour
                     break;
             }
         }
+        for (int i = 0; i < hand.cardList.Count; i++)
+        {
+            if (!view.IsMine && !hand.cardList[i].GetComponentInChildren<Card>().isFlippedDown)
+            {
+                hand.cardList[i].GetComponentInChildren<Card>().FlipCard();
+            }
+        }
     }
 
     public void DiscardCardFromHand()
@@ -211,6 +221,11 @@ public class PlayerController : MonoBehaviour
         {
             discard.AddCardToTop(playingAreas[playingAreaNo].TakeTopCard());
         }
+    }
+
+    public void PlayLeaderCard()
+    {
+        playingAreas[0].AddCardToBottom(deck.leader);
     }
 
     [PunRPC]

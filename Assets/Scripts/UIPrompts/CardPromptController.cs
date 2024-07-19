@@ -265,39 +265,68 @@ public class CardPromptController : MonoBehaviour
 
         playingAreas[attackingSpace].RestCard();
         playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().OnAttack(1);
+        // if not leader space
+        if (attackedSpace != 0 && attackedSpace != 6)
+        {
+            // do damage code
+            playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().def -= playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().atk;
+            playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().def -= playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().atk;
+            if (playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().def <= 0)
+            {
+                if (isSelf)
+                {
+                    player[1].GetComponent<PlayerController>().SendToDiscard(attackedSpace);
+                }
+                else
+                {
+                    player[0].GetComponent<PlayerController>().SendToDiscard(attackedSpace);
+                }
+            }
+            else
+            {
+                playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().UpdateCardText();
+            }
+            if (playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().def <= 0)
+            {
+                if (isSelf)
+                {
+                    player[0].GetComponent<PlayerController>().SendToDiscard(attackingSpace);
+                }
+                else
+                {
+                    player[1].GetComponent<PlayerController>().SendToDiscard(attackingSpace);
+                }
+            }
+            else
+            {
+                playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().UpdateCardText();
+            }
+        }
+        // if leader space
+        else if (attackedSpace == 0 || attackedSpace == 6)
+        {
+            // do player damage code
 
-        // do damage code
-        playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().def -= playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().atk;
-        playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().def -= playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().atk;
-        if (playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().def <= 0)
-        {
-            if (isSelf)
+            // attacking card damage code
+            if (attackingSpace != 0 && attackingSpace != 6)
             {
-                player[1].GetComponent<PlayerController>().SendToDiscard(attackedSpace);
+                playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().def -= playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().atk;
+                if (playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().def <= 0)
+                {
+                    if (isSelf)
+                    {
+                        player[0].GetComponent<PlayerController>().SendToDiscard(attackingSpace);
+                    }
+                    else
+                    {
+                        player[1].GetComponent<PlayerController>().SendToDiscard(attackingSpace);
+                    }
+                }
+                else
+                {
+                    playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().UpdateCardText();
+                }
             }
-            else
-            {
-                player[0].GetComponent<PlayerController>().SendToDiscard(attackedSpace);
-            }
-        }
-        else
-        {
-            playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().UpdateCardText();
-        }
-        if (playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().def <= 0)
-        {
-            if (isSelf)
-            {
-                player[0].GetComponent<PlayerController>().SendToDiscard(attackingSpace);
-            }
-            else
-            {
-                player[1].GetComponent<PlayerController>().SendToDiscard(attackingSpace);
-            }
-        }
-        else
-        {
-            playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().UpdateCardText();
         }
 
         if (isSelf && player[0].GetComponent<PlayerController>().view.IsMine)

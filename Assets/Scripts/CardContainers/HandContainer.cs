@@ -10,7 +10,8 @@ public class HandContainer : CardContainer
         RaycastHit hit;
         if (Physics.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector3.down, out hit, 100, cardLayerMask))
         {
-            if (hit.collider.gameObject.transform.parent.parent.name == "Hand")
+            if (hit.collider.gameObject.transform.parent.parent.name == "Hand" &&
+                hit.collider.gameObject.transform.parent.parent.parent.parent.GetComponent<PlayerController>().view.IsMine)
             {
                 if (hit.collider.gameObject.transform.parent.gameObject != tempCard)
                 {

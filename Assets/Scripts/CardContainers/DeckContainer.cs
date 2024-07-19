@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DeckContainer : CardContainer
 {
-    [SerializeField] public CardData leader;
+    [SerializeField] public GameObject leader;
     [SerializeField] public List<GameObject> deck;
     [SerializeField] public List<CardData> tokens;
 
@@ -15,9 +15,13 @@ public class DeckContainer : CardContainer
 
     private void Init()
     {
+        GameObject obj = Instantiate(leader);
+        obj.transform.SetParent(transform);
+        leader = obj;
+
         for (int i = 0; i < deck.Count; i++)
         {
-            GameObject obj = Instantiate(deck[i]);
+            obj = Instantiate(deck[i]);
             //obj.name = deck[i].name;
             //obj.GetComponentInChildren<Card>().cardData = deck[i];
             obj.GetComponentInChildren<Card>().FlipCard();

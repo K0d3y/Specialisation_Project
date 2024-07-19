@@ -696,7 +696,7 @@ MonoBehaviour:
   cardOffsetX: 0.001
   cardOffsetY: 0.001
   cardList: []
-  leader: {fileID: 11400000, guid: 00bfc3dfccc0ac144b480e2cae54fd34, type: 2}
+  leader: {fileID: 3359686560608334644, guid: 6fae54b9ca5290d41a2dc36fdd6b25ff, type: 3}
   deck:
   - {fileID: 3359686560608334644, guid: f5a8a6db1ac44784dad89c721aab784e, type: 3}
   - {fileID: 3359686560608334644, guid: f5a8a6db1ac44784dad89c721aab784e, type: 3}

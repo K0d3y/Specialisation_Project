@@ -97,6 +97,7 @@ public class GameplayManager : MonoBehaviour
         {
             player.DrawFromDeck(5, "HAND");
             player.DrawFromDeck(8, "RESILIENCE");
+            player.PlayLeaderCard();
         }
     }
 
