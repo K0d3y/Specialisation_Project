@@ -8,7 +8,7 @@ public class DrawAndDiscardOnPromote : MonoBehaviour, ICardAbility
     public void OnPromote(int i)
     {
         GameplayManager.Instance.DrawCard(i, 1);
-        GameplayManager.Instance.DiscardCard(i);
+        //GameplayManager.Instance.DiscardCard(i);
     }
     public void OnAttack(int i)
     {

@@ -27,6 +27,9 @@ public class PlayerController : MonoBehaviour
     public bool isPromoting = false;
     public bool isCLickToPreview = false;
     public bool isAttacking = false;
+    // game end stuff
+    [SerializeField] private GameObject gameEndPanel;
+    private bool isGameEnd = false;
 
     public PhotonView view;
 
@@ -47,7 +50,7 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (view.IsMine)
+        if (view.IsMine && !isGameEnd)
         {
             cardHolder.transform.position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             cardHolder.transform.localPosition = new Vector3(cardHolder.transform.localPosition.x, 0, cardHolder.transform.localPosition.z);
@@ -205,6 +208,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void DrawResilienceToHand()
+    {
+        hand.AddCardToTop(resilience.TakeTopCard());
+        if (resilience.cardList.Count <= 0)
+        {
+            // do game end code
+            view.RPC("DoGameEnd", RpcTarget.All);
+        }
+    }
+
     public void DiscardCardFromHand()
     {
         discardingCard = true;
@@ -250,5 +263,23 @@ public class PlayerController : MonoBehaviour
     public void AttackCard(int attackingSpace, int attackedSpace, bool isSelf)
     {
         cardPromptController.AttackCard(attackingSpace, attackedSpace, isSelf);
+    }
+
+    [PunRPC]
+    public void TakeResilience(int i)
+    {
+        cardPromptController.TakeResilience(i);
+    }
+
+    [PunRPC]
+    public void DoGameEnd()
+    {
+        isGameEnd = true;
+        if (resilience.cardList.Count <= 0)
+        {
+            // change text if win/loss
+            gameEndPanel.GetComponentInChildren<EndGamePanelManager>().UpdateTitleText("YOU WIN !");
+        }
+        gameEndPanel.SetActive(true);
     }
 }

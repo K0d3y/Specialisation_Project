@@ -43,6 +43,8 @@ MonoBehaviour:
   - StartTurn
   - ShuffleDeck
   - AttackCard
+  - TakeResilience
+  - DoGameEnd
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1

@@ -8,6 +8,9 @@ namespace Photon.Pun.Demo.Asteroids
 {
     public class LobbyMainPanel : MonoBehaviourPunCallbacks
     {
+        [Header("Start Panel")]
+        public GameObject StartPanel;
+
         [Header("Login Panel")]
         public GameObject LoginPanel;
 
@@ -144,15 +147,18 @@ namespace Photon.Pun.Demo.Asteroids
 
         public override void OnLeftRoom()
         {
-            SetActivePanel(SelectionPanel.name);
-
-            foreach (GameObject entry in playerListEntries.Values)
+            if (!StartPanel.activeSelf)
             {
-                Destroy(entry.gameObject);
-            }
+                SetActivePanel(SelectionPanel.name);
 
-            playerListEntries.Clear();
-            playerListEntries = null;
+                foreach (GameObject entry in playerListEntries.Values)
+                {
+                    Destroy(entry.gameObject);
+                }
+
+                playerListEntries.Clear();
+                playerListEntries = null;
+            }
         }
 
         public override void OnPlayerEnteredRoom(Player newPlayer)

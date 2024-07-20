@@ -305,8 +305,19 @@ public class CardPromptController : MonoBehaviour
         // if leader space
         else if (attackedSpace == 0 || attackedSpace == 6)
         {
-            // do player damage code
-
+            // attack goes through
+            if (playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().atk >= playingAreas[attackedSpace].cardList[0].GetComponentInChildren<Card>().def)
+            {
+                // which side player is on
+                if (attackedSpace == 0)
+                {
+                    player[0].GetComponent<PhotonView>().RPC("TakeResilience", RpcTarget.Others, 1);
+                }
+                else if (attackedSpace == 6)
+                {
+                    player[1].GetComponent<PhotonView>().RPC("TakeResilience", RpcTarget.Others, 0);
+                }
+            }
             // attacking card damage code
             if (attackingSpace != 0 && attackingSpace != 6)
             {
@@ -334,6 +345,11 @@ public class CardPromptController : MonoBehaviour
             GameplayManager.Instance.UpdateManaText();
             HideCardPrompts();
         }
+    }
+
+    public void TakeResilience(int i)
+    {
+        player[i].GetComponent<PlayerController>().DrawResilienceToHand();
     }
 
     public void HideCardPrompts()

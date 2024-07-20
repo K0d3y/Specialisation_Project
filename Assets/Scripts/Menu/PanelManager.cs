@@ -1,3 +1,4 @@
+using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ public class PanelManager : MonoBehaviour
 
     private void Start()
     {
+        PhotonNetwork.Disconnect();
         HideAllPanels();
         panels[0].SetActive(true);
     }
