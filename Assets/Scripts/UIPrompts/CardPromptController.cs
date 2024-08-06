@@ -11,6 +11,7 @@ public class CardPromptController : MonoBehaviour
     [SerializeField] public GameObject cardActionGroup;
     [SerializeField] private GameObject attackTargetGroup;
     [SerializeField] private GameObject handTargetGroup;
+    [SerializeField] private GameObject tutorialGroup;
     // for card preview
     public List<GameObject> player = new List<GameObject>();
     [SerializeField] private GameObject cardPrefab;
@@ -356,6 +357,20 @@ public class CardPromptController : MonoBehaviour
         player[i].GetComponent<PlayerController>().DrawResilienceToHand();
     }
 
+    public void ToggleTutorialPrompts()
+    {
+        if (tutorialGroup.activeSelf)
+        {
+            HideCardPrompts();
+        }
+        else
+        {
+            HideCardPrompts();
+            turnOrderGroup.SetActive(false);
+            tutorialGroup.SetActive(true);
+        }
+    }
+
     public void HideCardPrompts()
     {
         player[0].GetComponent<PlayerController>().isCLickToPreview = false;
@@ -366,6 +381,7 @@ public class CardPromptController : MonoBehaviour
         cardActionGroup.SetActive(false);
         attackTargetGroup.SetActive(false);
         handTargetGroup.SetActive(false);
+        tutorialGroup.SetActive(false);
     }
 
     public void UpdateTurnOrderButton()
