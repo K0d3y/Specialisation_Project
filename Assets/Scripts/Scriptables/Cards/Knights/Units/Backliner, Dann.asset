@@ -15,9 +15,10 @@ MonoBehaviour:
   CardName: Backliner, Dann
   CardType: UNIT
   CardRace: Knight
-  CardAbilty1: 'Follower : [Defender].'
+  CardAbilty1: 
   CardAbility2: 
   CardCost: 2
+  CardCost2: 0
   CardRank: 1
   CardAttack: 1
   CardDefense: 3

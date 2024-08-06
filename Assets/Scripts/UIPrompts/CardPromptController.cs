@@ -22,6 +22,8 @@ public class CardPromptController : MonoBehaviour
     [SerializeField] private PlayingAreaButtonManager pabManager;
     [SerializeField] private TargetAreaButtonManager tabManager;
     private List<PlayingAreaContainer> playingAreas = new List<PlayingAreaContainer>();
+    // audio
+    [SerializeField] public AudioManager audioManager;
 
     public void Init()
     {
@@ -262,6 +264,8 @@ public class CardPromptController : MonoBehaviour
             attackingSpace += 6;
             player[0].GetComponent<PlayerController>().isAttacking = true;
         }
+
+        audioManager.PlaySound(3);
 
         playingAreas[attackingSpace].RestCard();
         playingAreas[attackingSpace].cardList[0].GetComponentInChildren<Card>().OnAttack(1);

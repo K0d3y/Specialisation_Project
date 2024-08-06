@@ -16,7 +16,7 @@ MonoBehaviour:
   CardType: SPELL
   CardRace: Human
   CardAbilty1: Draw 1 card.
-  CardAbility2: Draw 1 card.
+  CardAbility2: 
   CardCost: 2
   CardCost2: 0
   CardRank: 0

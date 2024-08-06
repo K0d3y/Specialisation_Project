@@ -16,9 +16,9 @@ MonoBehaviour:
   CardType: UNIT
   CardRace: Human
   CardAbilty1: 
-  CardAbility2: Search your deck for units whose Rank add up to 3 and put them into
-    your hand. Shuffle your deck.
+  CardAbility2: 
   CardCost: 1
+  CardCost2: 0
   CardRank: 1
   CardAttack: 1
   CardDefense: 1

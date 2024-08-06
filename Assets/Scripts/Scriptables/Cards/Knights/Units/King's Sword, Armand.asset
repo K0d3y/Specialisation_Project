@@ -15,11 +15,8 @@ MonoBehaviour:
   CardName: King's Sword, Armand
   CardType: UNIT
   CardRace: Knight
-  CardAbilty1: '[Promote (6)].
-
-    Leader : When a unit enters a Follower space
-    on your field, it gets [Rush].'
-  CardAbility2: Put the top card of your deck into your Resilience.
+  CardAbilty1: '[Rush]'
+  CardAbility2: 
   CardCost: 6
   CardCost2: 6
   CardRank: 3

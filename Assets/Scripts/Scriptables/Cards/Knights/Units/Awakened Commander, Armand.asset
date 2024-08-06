@@ -16,8 +16,7 @@ MonoBehaviour:
   CardType: UNIT
   CardRace: Commander
   CardAbilty1: '[Promote (3)] Leader : All units on your field get +1/+1.'
-  CardAbility2: You may discard a card. If you do, draw a card and give all Followers
-    on your field +0/+2.
+  CardAbility2: 
   CardCost: 4
   CardCost2: 3
   CardRank: 2

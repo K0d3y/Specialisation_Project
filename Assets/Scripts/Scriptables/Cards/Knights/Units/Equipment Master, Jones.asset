@@ -15,7 +15,7 @@ MonoBehaviour:
   CardName: Equipment Master, Jones
   CardType: UNIT
   CardRace: Knight
-  CardAbilty1: "[Promote (3)] : Draw 1 card. Discard 1 card.\r"
+  CardAbilty1: "[Promote (3)] : Draw 1 card.\r"
   CardAbility2: "\r"
   CardCost: 4
   CardCost2: 3

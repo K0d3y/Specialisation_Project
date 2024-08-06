@@ -15,9 +15,8 @@ MonoBehaviour:
   CardName: Leading Force, Lancelot
   CardType: UNIT
   CardRace: Knight
-  CardAbilty1: "[Promote (3)] : The next unit you play gets [Rush].\r"
-  CardAbility2: "If your Leader is Rank 1, you may [Promote] this card without paying
-    its cost.\r"
+  CardAbilty1: 
+  CardAbility2: 
   CardCost: 3
   CardCost2: 3
   CardRank: 2

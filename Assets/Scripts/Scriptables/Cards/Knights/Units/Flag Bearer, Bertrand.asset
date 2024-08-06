@@ -15,10 +15,7 @@ MonoBehaviour:
   CardName: Flag Bearer, Bertrand
   CardType: UNIT
   CardRace: Knight
-  CardAbilty1: '[Summon] : Summon 2 1/1 Swordsman Tokens. Swordsman Tokens summoned
-    by this card get [Rush].
-
-    [Promote (4)] : [Rush].'
+  CardAbilty1: '[Promote (4)] : [Rush].'
   CardAbility2: 
   CardCost: 7
   CardCost2: 4

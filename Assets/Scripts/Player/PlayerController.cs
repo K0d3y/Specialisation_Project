@@ -27,16 +27,19 @@ public class PlayerController : MonoBehaviour
     public bool isPromoting = false;
     public bool isCLickToPreview = false;
     public bool isAttacking = false;
+    // audio
+    private AudioManager audioManager;
     // game end stuff
     [SerializeField] private GameObject gameEndPanel;
     private bool isGameEnd = false;
-
+    // photon view
     public PhotonView view;
 
     private void Start()
     {
         view = GetComponent<PhotonView>();
         cardPromptController = GameObject.FindGameObjectWithTag("PromptController").GetComponent<CardPromptController>();
+        audioManager = cardPromptController.audioManager;
 
         isMyTurn = PhotonNetwork.IsMasterClient;
         if (!view.IsMine)
@@ -184,6 +187,7 @@ public class PlayerController : MonoBehaviour
 
     public void DrawFromDeck(int noOfTimes, string location)
     {
+        audioManager.PlaySound(1);
         for (int i = 0; i < noOfTimes; i++)
         {
             switch(location)
@@ -210,7 +214,15 @@ public class PlayerController : MonoBehaviour
 
     public void DrawResilienceToHand()
     {
+        audioManager.PlaySound(1);
         hand.AddCardToTop(resilience.TakeTopCard());
+        for (int i = 0; i < hand.cardList.Count; i++)
+        {
+            if (!view.IsMine && !hand.cardList[i].GetComponentInChildren<Card>().isFlippedDown)
+            {
+                hand.cardList[i].GetComponentInChildren<Card>().FlipCard();
+            }
+        }
         if (resilience.cardList.Count <= 0)
         {
             // do game end code
@@ -220,12 +232,14 @@ public class PlayerController : MonoBehaviour
 
     public void DiscardCardFromHand()
     {
+        audioManager.PlaySound(1);
         discardingCard = true;
         cardPromptController.ShowHandGroup();
     }
 
     public void SendToDiscard(int playingAreaNo)
     {
+        audioManager.PlaySound(1);
         if (playingAreaNo >= 6)
         {
             playingAreaNo -= 6;

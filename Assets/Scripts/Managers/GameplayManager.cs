@@ -96,14 +96,14 @@ public class GameplayManager : MonoBehaviour
         foreach (PlayerController player in players)
         {
             player.DrawFromDeck(5, "HAND");
-            player.DrawFromDeck(8, "RESILIENCE");
+            player.DrawFromDeck(5, "RESILIENCE");
             player.PlayLeaderCard();
         }
     }
 
     public void DrawCard(int playerNo, int amt)
     {
-        players[playerNo].DrawFromDeck(amt, "HAND");
+        players[currPlayer].DrawFromDeck(amt, "HAND");
     }
 
     public void DiscardCard(int playerNo)
