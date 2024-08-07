@@ -1,7 +1,9 @@
 using Photon.Pun;
+using Photon.Pun.Demo.Asteroids;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameplayManager : MonoBehaviour
 {
@@ -42,15 +44,16 @@ public class GameplayManager : MonoBehaviour
     }
 
     private List<PlayingAreaContainer> playingAreas = new List<PlayingAreaContainer>();
-    [SerializeField] TMP_Text phase_text;
-    [SerializeField] TurnOrderController turnOrderController;
+    [SerializeField] private TMP_Text phase_text;
+    [SerializeField] private TurnOrderController turnOrderController;
     [SerializeField] private CardPromptController cardPromptController;
+    [SerializeField] private List<Image> playerColors;
+    [SerializeField] private TMP_Text manaCount_text;
 
     public List<PlayerController> players;
     public string currPhase;
     public int currPlayer = 0;
 
-    [SerializeField] private TMP_Text manaCount_text;
 
     private void Awake()
     {
@@ -86,11 +89,15 @@ public class GameplayManager : MonoBehaviour
         {
             players[1].deck.ShuffleContainer(s1);
             players[0].deck.ShuffleContainer(s2);
+            playerColors[0].color = AsteroidsGame.GetColor(0);
+            playerColors[1].color = AsteroidsGame.GetColor(1);
         }
         else
         {
             players[0].deck.ShuffleContainer(s1);
             players[1].deck.ShuffleContainer(s2);
+            playerColors[1].color = AsteroidsGame.GetColor(0);
+            playerColors[0].color = AsteroidsGame.GetColor(1);
         }
 
         foreach (PlayerController player in players)
